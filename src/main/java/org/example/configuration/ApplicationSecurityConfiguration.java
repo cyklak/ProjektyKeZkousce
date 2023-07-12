@@ -30,7 +30,6 @@ public class ApplicationSecurityConfiguration {
                 .and()
                 .build();
     }
-//pokus
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
