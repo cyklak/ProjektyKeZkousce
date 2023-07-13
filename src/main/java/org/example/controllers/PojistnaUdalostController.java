@@ -126,103 +126,103 @@ public class PojistnaUdalostController {
         List<PojisteniDTO> pojisteni = pojisteniService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
 
         if (udalost.getNeplatnaPojisteni() != null) {
-            for (PojisteniDTO jednopojisteni : pojisteni)
-                if (udalost.getNeplatnaPojisteni().contains(jednopojisteni.getPojisteniId())) {
-                    jednopojisteni.setAktivni(true);
-                    udalost.getPojisteniIds().remove(jednopojisteni.getPojisteniId());
+            for (PojisteniDTO jednoPojisteni : pojisteni)
+                if (udalost.getNeplatnaPojisteni().contains(jednoPojisteni.getPojisteniId())) {
+                    jednoPojisteni.setAktivni(true);
+                    udalost.getPojisteniIds().remove(jednoPojisteni.getPojisteniId());
                 }
         }
-            model.addAttribute("seznamPojisteni", pojisteni);
-            model.addAttribute("pojistenec", pojistenec);
-            model.addAttribute("udalostiAktivni", 1);
-            return "pages/udalosti/novaUdalost";
-        }
+        model.addAttribute("seznamPojisteni", pojisteni);
+        model.addAttribute("pojistenec", pojistenec);
+        model.addAttribute("udalostiAktivni", 1);
+        return "pages/udalosti/novaUdalost";
+    }
 
-        @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
-        @PostMapping("novaUdalost")
-        public String createNovaUdalost (
-                @Valid @ModelAttribute PojistnaUdalostDTO udalostDTO, BindingResult result, Model model,
-                RedirectAttributes redirectAttributes
-    ){
-            UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (result.hasErrors())
-                return renderNovaUdalost(udalostDTO, model);
-            List<Long> neplatnaPojisteni = udalostService.filtrujPojisteni(udalostDTO);
-            if (neplatnaPojisteni.isEmpty()) {
-                udalostService.create(udalostDTO, user.getPojistenec().getPojistenecId());
-                redirectAttributes.addFlashAttribute("success", "Pojistná událost byla vytvořena.");
-                return "redirect:/udalosti/stranka/1";
-            } else
-                udalostDTO.setNeplatnaPojisteni(neplatnaPojisteni);
+    @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
+    @PostMapping("novaUdalost")
+    public String createNovaUdalost(
+            @Valid @ModelAttribute PojistnaUdalostDTO udalostDTO, BindingResult result, Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+        UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (result.hasErrors())
             return renderNovaUdalost(udalostDTO, model);
-
-        }
-
-
-        @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
-        @GetMapping("edit/{pojistnaUdalostId}")
-        public String renderEditForm (
-        @PathVariable long pojistnaUdalostId,
-        PojistnaUdalostDTO udalostDTO, Model model
-    ){
-
-            PojistnaUdalostDTO fetchedUdalost = udalostService.getById(pojistnaUdalostId);
-            PojistenecDTO pojistenec = pojistenecService.getById(udalostService.getById(pojistnaUdalostId).getPojistenecId());
-            model.addAttribute("pojistenec", pojistenec);
-            List<PojisteniDTO> pojisteni = pojisteniService.getAllByPojistenecId(udalostService.getById(pojistnaUdalostId).getPojistenecId());
-            if (udalostDTO.getNeplatnaPojisteni() != null) {
-                for (PojisteniDTO jednopojisteni : pojisteni)
-                    if (udalostDTO.getNeplatnaPojisteni().contains(jednopojisteni.getPojisteniId()))
-                        jednopojisteni.setAktivni(true);
-            }
-
-            model.addAttribute("seznamPojisteni", pojisteni);
-            udalostMapper.updatePojistnaUdalostDTO(fetchedUdalost, udalostDTO);
-            model.addAttribute("udalostiAktivni", 1);
-
-            return "pages/udalosti/edit";
-        }
-
-        @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
-        @PostMapping("edit/{pojistnaUdalostId}")
-        public String editPojisteni (
-        @PathVariable long pojistnaUdalostId,
-        @Valid PojistnaUdalostDTO udalostDTO,
-        BindingResult result,
-        RedirectAttributes redirectAttributes, Model model
-    ){
-            if (result.hasErrors())
-                return renderEditForm(pojistnaUdalostId, udalostDTO, model);
-            udalostDTO.setPojistnaUdalostId(pojistnaUdalostId);
-            List<Long> neplatnaPojisteni = udalostService.filtrujPojisteni(udalostDTO);
-            if (neplatnaPojisteni.isEmpty()) {
-                udalostService.edit(udalostDTO, udalostService.getById(pojistnaUdalostId).getPojistenecId());
-                redirectAttributes.addFlashAttribute("success", "Změny byly provedeny.");
-                return "redirect:/udalosti/stranka/1";
-            } else
-                udalostDTO.setNeplatnaPojisteni(neplatnaPojisteni);
-            return renderEditForm(pojistnaUdalostId, udalostDTO, model);
-
-        }
-
-        @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
-        @GetMapping("delete/{udalostId}")
-        public String deleteUdalost ( @PathVariable long udalostId,
-        RedirectAttributes redirectAttributes){
-            udalostService.remove(udalostId);
-            redirectAttributes.addFlashAttribute("success", "Událost byla smazána.");
-
+        List<Long> neplatnaPojisteni = udalostService.filtrujPojisteni(udalostDTO);
+        if (neplatnaPojisteni.isEmpty()) {
+            udalostService.create(udalostDTO, user.getPojistenec().getPojistenecId());
+            redirectAttributes.addFlashAttribute("success", "Pojistná událost byla vytvořena.");
             return "redirect:/udalosti/stranka/1";
-        }
-
-        @ExceptionHandler({UdalostNotFoundException.class})
-        public String handleUdalostNotFoundException (
-                RedirectAttributes redirectAttributes
-    ){
-            redirectAttributes.addFlashAttribute("error", "Pojištěnec nenalezen.");
-            return "redirect:/stranka/{currentPage}";
-        }
+        } else
+            udalostDTO.setNeplatnaPojisteni(neplatnaPojisteni);
+        return renderNovaUdalost(udalostDTO, model);
 
     }
+
+
+    @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
+    @GetMapping("edit/{pojistnaUdalostId}")
+    public String renderEditForm(
+            @PathVariable long pojistnaUdalostId,
+            PojistnaUdalostDTO udalostDTO, Model model
+    ) {
+
+        PojistnaUdalostDTO fetchedUdalost = udalostService.getById(pojistnaUdalostId);
+        PojistenecDTO pojistenec = pojistenecService.getById(udalostService.getById(pojistnaUdalostId).getPojistenecId());
+        model.addAttribute("pojistenec", pojistenec);
+        List<PojisteniDTO> pojisteni = pojisteniService.getAllByPojistenecId(udalostService.getById(pojistnaUdalostId).getPojistenecId());
+        if (udalostDTO.getNeplatnaPojisteni() != null) {
+            for (PojisteniDTO jednopojisteni : pojisteni)
+                if (udalostDTO.getNeplatnaPojisteni().contains(jednopojisteni.getPojisteniId()))
+                    jednopojisteni.setAktivni(true);
+        }
+
+        model.addAttribute("seznamPojisteni", pojisteni);
+        udalostMapper.updatePojistnaUdalostDTO(fetchedUdalost, udalostDTO);
+        model.addAttribute("udalostiAktivni", 1);
+
+        return "pages/udalosti/edit";
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
+    @PostMapping("edit/{pojistnaUdalostId}")
+    public String editPojisteni(
+            @PathVariable long pojistnaUdalostId,
+            @Valid PojistnaUdalostDTO udalostDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes, Model model
+    ) {
+        if (result.hasErrors())
+            return renderEditForm(pojistnaUdalostId, udalostDTO, model);
+        udalostDTO.setPojistnaUdalostId(pojistnaUdalostId);
+        List<Long> neplatnaPojisteni = udalostService.filtrujPojisteni(udalostDTO);
+        if (neplatnaPojisteni.isEmpty()) {
+            udalostService.edit(udalostDTO, udalostService.getById(pojistnaUdalostId).getPojistenecId());
+            redirectAttributes.addFlashAttribute("success", "Změny byly provedeny.");
+            return "redirect:/udalosti/stranka/1";
+        } else
+            udalostDTO.setNeplatnaPojisteni(neplatnaPojisteni);
+        return renderEditForm(pojistnaUdalostId, udalostDTO, model);
+
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
+    @GetMapping("delete/{udalostId}")
+    public String deleteUdalost(@PathVariable long udalostId,
+                                RedirectAttributes redirectAttributes) {
+        udalostService.remove(udalostId);
+        redirectAttributes.addFlashAttribute("success", "Událost byla smazána.");
+
+        return "redirect:/udalosti/stranka/1";
+    }
+
+    @ExceptionHandler({UdalostNotFoundException.class})
+    public String handleUdalostNotFoundException(
+            RedirectAttributes redirectAttributes
+    ) {
+        redirectAttributes.addFlashAttribute("error", "Pojištěnec nenalezen.");
+        return "redirect:/stranka/{currentPage}";
+    }
+
+}
 
 

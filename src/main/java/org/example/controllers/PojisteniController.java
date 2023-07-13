@@ -57,11 +57,12 @@ public class PojisteniController {
         } else if (user.getRole().contains(POJISTNIK)) {
             pojisteni = pojisteniService.getPojisteniByUserId(user.getUserId());
             model.addAttribute("paginace", 1);
+        } else {
+            pojisteni = pojisteniService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
+            model.addAttribute("paginace", 1);
         }
-        else {pojisteni = pojisteniService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
-            model.addAttribute("paginace", 1);}
         model.addAttribute("pojisteni", pojisteni);
-        if (user.getRole().equals("ADMIN")) {
+        if (user.isAdmin()) {
             if (pojisteniRepository.count() > 10) {
                 model.addAttribute("soucasnaStrana", currentPage);
             }
@@ -152,7 +153,8 @@ public class PojisteniController {
             return renderEditForm(pojistenecId, pojisteniId, pojisteni, model);
         if (pojisteni.getPlatnostDo().isBefore(pojisteni.getPlatnostOd())) {
             result.rejectValue("platnostDo", "error", "Platnost do nemůže být menší než platnost od.");
-            return renderNovePojisteni(pojistenecId, pojisteni, model);}
+            return renderNovePojisteni(pojistenecId, pojisteni, model);
+        }
         pojisteni.setPojisteniId(pojisteniId);
         pojisteni.setPojistenec(pojistenecService.getById(pojistenecId));
         pojisteniService.edit(pojisteni);
