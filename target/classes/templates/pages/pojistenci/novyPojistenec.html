@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+<article>
+    <header>
+        <h3 class="py-4">Nový pojištěnec</h3>
+    </header>
+    <section>
+        <p class="container bg-warning py-3 ml-0" style="border-radius: 7px;">Každý pojistník může vytvořit libovolné množství pojištěných. Po vytvoření nového pojištěného/pojištěné si
+            zaznamenejte automaticky vygenerované heslo, které se bude vázat k jeho/jejímu mailu a bude se jím přihlašovat.
+            Pokud teď zadáte stejný email jako při registraci účtu, budete zároveň pojištěným. V tomto případě je po vytvoření pojištěného třeba se
+            odhlásit a opět příhlásit.</p>
+        <form method="post" class="mt-5"
+              th:action="@{/pojistenci/novyPojistenec}" th:object="${pojistenecDTO}">
+            <div class="form-row col-xl-8 col-sm">
+                <div class="form-group col-md-6 col-sm">
+                    <label for="jmeno">Jméno</label>
+                    <input th:field="*{jmeno}" type="text" class="form-control" placeholder="Jméno" id="jmeno">
+                    <small class="text-danger" th:errors="*{jmeno}"></small>
+                </div>
+                <div class="w-100 d-md-none"></div>
+                <div class="form-group col-md-6 col-sm">
+                    <label for="prijmeni">Příjmení</label>
+                    <input th:field="*{prijmeni}" type="text" class="form-control" placeholder="Příjmení" id="prijmeni">
+                    <small class="text-danger" th:errors="*{prijmeni}"></small>
+                </div>
+            </div>
+            <div class="form-row col-xl-8 col-sm">
+                <div class="form-group col-md-6 col-sm">
+                    <label for="email">Email</label>
+                    <input th:field="*{email}" type="email" class="form-control" placeholder="jannovak88@seznam.cz"
+                           id="email">
+                    <small class="text-danger" th:errors="*{email}"></small>
+                </div>
+                <div class="w-100 d-md-none"></div>
+                <div class="form-group col-md-6 col-sm">
+                    <label for="telefon">Telefon</label>
+                    <input th:field="*{telefon}" type="text" class="form-control" placeholder="111 111 111"
+                           id="telefon">
+                    <small class="text-danger" th:errors="*{telefon}"></small>
+                </div>
+            </div>
+            <div class="form-row col-xl-8 col-sm">
+                <div class="form-group col-md-6 col-sm">
+                    <label for="ulice">Ulica a číslo popisné</label>
+                    <input th:field="*{ulice}" type="text" class="form-control" placeholder="Ve svahu 3" id="ulice">
+                    <small class="text-danger" th:errors="*{ulice}"></small>
+                </div>
+                <div class="w-100 d-md-none"></div>
+                <div class="form-group col-md-6 col-sm">
+                    <label for="mesto">Město</label>
+                    <input th:field="*{mesto}" type="text" class="form-control" placeholder="Praha 1" id="mesto">
+                    <small class="text-danger" th:errors="*{mesto}"></small>
+                </div>
+            </div>
+            <div class="form-row col-xl-8 col-sm">
+                <div class="form-group col-md-6 d-none d-md-block">
+                </div>
+                <div class="form-group col-md-6 col-sm">
+                    <label for="psc">PSČ</label>
+                    <input th:field="*{psc}" type="text" class="form-control" placeholder="100 00" id="psc">
+                    <small class="text-danger" th:errors="*{psc}"></small>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center mt-3 mb-4">
+                <button class="btn btn-primary" type="submit">Uložit</button>
+            </div>
+        </form>
+    </section>
+</article>
+
+</body>
+</html>

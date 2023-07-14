@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<div class="py-2 mt-3 alert alert-success text-center" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 mt-3 alert alert-danger text-center" th:text="${error}" th:if="${error}"></div>
+
+<article>
+    <header>
+        <h3 class="py-4">Pojistné události</h3>
+        <p sec:authorize="hasAnyRole('POJISTENY', 'POJISTNIK')" class="container bg-warning py-3 mb-3 ml-0" style="border-radius: 7px;">Nové události se vždy vážou k pojištěním aktuálně přihlášeného uživatele.
+            Pokud pojistník vytvoří pojistnou událost, bude se vázat k jeho pojištěním.</p>
+    </header>
+    <section class="d-flex flex-column align-items-center col-xl-8 col-sm">
+        <a sec:authorize="hasRole('POJISTENY')" class="btn btn-primary" th:href="@{'/udalosti/novaUdalost'}">Nová událost</a>
+        <table class="table mt-3" style="border: 2px solid black">
+            <thead>
+            <th class="col-3" style="border: 2px solid black">Jméno pojištěnce</th>
+            <th class="col-3" style="border: 2px solid black">Název události</th>
+            <th class="col-3" style="border: 2px solid black">Datum události</th>
+            <th class="col-3" style="border: 2px solid black"></th>
+            </thead>
+            <tbody id="tabulka">
+            <tr th:each="udalost: ${udalosti}" style="border: 2px solid black">
+                <td style="border: 2px solid black"><a
+                        th:href="@{'/pojistenci/' + ${udalost.pojistenecId}}"
+                        th:text="${udalost.jmenoPojisteneho} + ' ' + ${udalost.prijmeniPojisteneho}"></a></td>
+                <td style="border: 2px solid black"><a
+                        th:href="@{'/udalosti/' + ${udalost.pojistnaUdalostId} + '/detail'}"
+                        th:text="${udalost.nazevUdalosti}"></a></td>
+                <td style="border: 2px solid black" th:text="${udalost.datumUdalosti}"></td>
+                <td class="d-flex flex-column flex-md-row justify-content-md-start">
+                    <a class="btn btn-danger mb-1 mb-md-0 mr-md-2"
+                       th:href="@{'/udalosti/delete/' + ${udalost.pojistnaUdalostId}}">Odstranit</a>
+                    <a class="btn btn-warning"
+                       th:href="@{'/udalosti/edit/' + ${udalost.pojistnaUdalostId}}">Editovat</a>
+            </tr>
+            </tbody>
+        </table>
+        <div id="paginace" th:if="${paginace}" class="d-flex justify-content-center align-items-center mt-3 mb-sm-3"></div>
+    </section>
+    <footer class="d-flex justify-content-center align-items-center mt-3 mb-sm-3">
+        <nav aria-label="Stránkování">
+            <ul class="pagination">
+                <li th:if="${predchoziStrana}" class="page-item">
+                    <a class="page-link" th:href="@{'/udalosti/stranka/' + ${predchoziStrana}}" aria-label="Prev">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Prev</span>
+                    </a>
+                </li>
+                <li th:if="${predpredchoziStrana}" class="page-item"><a class="page-link"
+                                                                        th:text="${predpredchoziStrana}"
+                                                                        th:href="@{'/udalosti/stranka/' + ${predpredchoziStrana}}"></a>
+                </li>
+                <li th:if="${predchoziStrana}" class="page-item"><a class="page-link" th:text="${predchoziStrana}"
+                                                                    th:href="@{'/udalosti/stranka/' + ${predchoziStrana}}"></a>
+                </li>
+                <li th:if="${soucasnaStrana}" class="page-item active"><a class="page-link" th:text="${soucasnaStrana}"
+                                                                          href="#"></a></li>
+                <li th:if="${pristiStrana}" class="page-item"><a class="page-link" th:text="${pristiStrana}"
+                                                                 th:href="@{'/udalosti/stranka/' + ${pristiStrana}}"></a>
+                </li>
+                <li th:if="${prespristiStrana}" class="page-item"><a class="page-link" th:text="${prespristiStrana}"
+                                                                     th:href="@{'/udalosti/stranka/' + ${prespristiStrana}}"></a>
+                </li>
+
+                <li th:if="${pristiStrana}" class="page-item">
+                    <a class="page-link" th:href="@{'/udalosti/stranka/' + ${pristiStrana}}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </footer>
+</article>
+
+<footer></footer>
+
+</body>
+</html>

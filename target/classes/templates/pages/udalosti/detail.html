@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<div class="py-2 mt-3 alert alert-success text-center" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 mt-3 alert alert-danger text-center" th:text="${error}" th:if="${error}"></div>
+
+<article class="mt-4">
+    <div class="col col-xl-8 d-flex flex-column flex-sm-row justify-content-start">
+        <img th:src="@{/images/klient.png}" alt="klient" class="d-none d-md-block mr-3">
+        <div class="mr-auto text-nowrap mb-3 mb-sm-none">
+            <h3>Detail události</h3>
+            <p><strong>Název události: </strong><span th:text="${udalost.nazevUdalosti}"></span></p>
+            <p><strong>Datum události: </strong><span th:text="${udalost.datumUdalosti}"></span></p>
+            <p><strong>Aplikovaná pojištění </strong></p>
+            <div th:each="pojisteni: ${seznamPojisteni}" th:text="${pojisteni.typPojisteni}">
+            </div>
+        </div>
+        <div class="text-wrap ml-sm-5">
+            <h3 class="invisible d-none d-sm-block">j</h3>
+            <p><strong>Popis události: </strong><span th:text="${udalost.popisUdalosti}"></span></p>
+        </div>
+    </div>
+
+    <footer class="d-flex flex-column flex-sm-row justify-content-center mt-3">
+        <a th:href="@{'/udalosti/edit/' + ${udalost.pojistnaUdalostId}}"
+           class="btn btn-warning mx-0 mx-sm-1 my-1 my-sm-0">Editovat událost</a>
+        <a th:href="@{'/udalosti/delete/' + ${udalost.pojistnaUdalostId}}"
+           class="btn btn-danger mx-0 mx-sm-1 my-1 my-sm-0">Odstranit událost</a>
+        <a th:href="@{'/udalosti/stranka/1'}" class="btn btn-secondary mx-0 mx-sm-1 my-1 my-sm-0">Zpět</a>
+    </footer>
+</article>
+
+<footer></footer>
+
+</body>
+</html>
