@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<div class="py-2 mt-3 alert alert-success text-center" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 mt-3 alert alert-danger text-center" th:text="${error}" th:if="${error}"></div>
+
+<article class="mt-4">
+        <div class="col col-lg-8 d-flex flex-column flex-md-row justify-content-start text-nowrap">
+            <img th:src="@{/images/klient.png}" alt="klient" class="d-none d-md-block mr-3">
+                <div class="mr-auto">
+                <h3 th:text="${pojistenec.jmeno} + ' ' + ${pojistenec.prijmeni}"></h3>
+                <p th:text="${pojistenec.ulice}"></p>
+                <p th:text="${pojistenec.mesto}"></p>
+                <p th:text="${pojistenec.psc}"></p>
+                </div>
+            <div>
+                <h3 class="invisible d-none d-md-block">j</h3>
+                <p th:text="'Email pojištěného: ' + ${pojistenec.email}"></p>
+                <p th:text="${pojistenec.telefon}"></p>
+                <p th:text="'Email pojistníka: ' + ${pojistnik.email}"></p>
+            </div>
+        </div>
+    <div class="d-flex flex-column align-items-center col-xl-8 col-sm">
+        <table class="table mt-3" style="border: 2px solid black">
+            <thead>
+            <th class="col-4" style="border: 2px solid black">Pojištění</th>
+            <th class="col-4" style="border: 2px solid black">Částka</th>
+            <th class="col-4" style="border: 2px solid black"></th>
+            </thead>
+                <tr th:each="detailpojisteni: ${pojisteni}" style="border: 2px solid black">
+                    <td style="border: 2px solid black"><a th:text="${detailpojisteni.typPojisteni}" th:href="@{'/pojisteni/' + ${pojistenec.pojistenecId} + '/detail/' + ${detailpojisteni.pojisteniId}}"></a></td>
+                    <td style="border: 2px solid black" th:text="${detailpojisteni.castka}"></td>
+                    <td class="d-flex flex-column flex-md-row justify-content-md-start">
+                        <a sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')" class="btn btn-danger mb-1 mb-md-0 mr-md-2" th:href="@{'/pojisteni/' + ${pojistenec.pojistenecId} + '/delete/' + ${detailpojisteni.pojisteniId}}">Odstranit</a>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')" class="btn btn-warning" th:href="@{'/pojisteni/' + ${pojistenec.pojistenecId} + '/edit/' + ${detailpojisteni.pojisteniId}}">Editovat</a>
+                    </td>
+                </tr>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="d-flex flex-column flex-md-row justify-content-center mt-3">
+        <a th:href="@{'/pojisteni/' + ${pojistenec.pojistenecId} + '/novePojisteni'}" sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')" class="btn btn-primary mx-0 mx-sm-1 my-1 my-md-0">Přidat pojištění</a>
+        <a th:href="@{'/pojistenci/edit/' + ${pojistenec.pojistenecId}}" class="btn btn-warning mx-0 mx-sm-1 my-1 my-md-0">Editovat pojištěnce</a>
+        <a th:href="@{'/pojistenci/delete/' + ${pojistenec.pojistenecId}}" class="btn btn-danger mx-0 mx-sm-1 my-1 my-md-0" sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')">Odstranit pojištěnce</a>
+    </footer>
+</article>
+
+<footer></footer>
+
+</body>
+</html>

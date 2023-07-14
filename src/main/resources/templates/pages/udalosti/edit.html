@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+    <header>
+        <h3 th:text="'Editovat událost k ' + ${pojistenec.jmeno} + ' ' + ${pojistenec.prijmeni}" class="py-4"></h3>
+    </header>
+    <section>
+        <form method="post" th:action="@{'/udalosti/edit/' + ${pojistnaUdalostId}}" th:object="${pojistnaUdalostDTO}">
+            <div class="form-row col">
+                <div class="form-group">
+                    <label for="nazevUdalosti">Název události</label>
+                    <input type="text" th:field="*{nazevUdalosti}" id="nazevUdalosti" class="form-control">
+                    <small class="text-danger" th:errors="*{nazevUdalosti}"></small>
+                </div>
+            </div>
+            <div class="form-row col">
+                <div class="form-group">
+                    <label for="datumUdalosti">Datum události</label>
+                    <input th:field="*{datumUdalosti}" type="date" class="form-control" id="datumUdalosti">
+                    <small class="text-danger" th:errors="*{datumUdalosti}"></small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="popisUdalosti">Popis události</label>
+                <textarea th:field="*{popisUdalosti}" type="text" class="form-control" id="popisUdalosti"
+                          rows="5"></textarea>
+                <small class="text-danger" th:errors="*{popisUdalosti}"></small>
+            </div>
+            <h5>Označte aplikovatelná pojištění</h5>
+            <div class="d-flex flex-column flex-md-row">
+                <div th:each="pojisteni: ${seznamPojisteni}" class="form-check mr-4">
+                    <label class="form-check-label">
+                        <strong><input class="form-check-input" type="checkbox" th:value="${pojisteni.pojisteniId}"
+                                       th:field="*{pojisteniIds}" th:text="${pojisteni.typPojisteni}"></strong><span
+                            class="ml-2" th:text="${pojisteni.platnostOd} + ' až ' + ${pojisteni.platnostDo}"></span>
+                    </label>
+                    </br>
+                    <small th:if="${pojisteni.aktivni}" class="text-danger">Událost nespadá do období tohoto
+                        pojištění.</small>
+                </div>
+                <small class="text-danger" th:errors="*{pojisteniIds}"></small>
+            </div>
+            <div class="d-flex justify-content-center align-items-center mt-3 mb-sm-3">
+                <button class="btn btn-primary" type="submit">Uložit</button>
+            </div>
+        </form>
+    </section>
+</article>
+</body>
+</html>
