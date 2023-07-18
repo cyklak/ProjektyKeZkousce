@@ -32,27 +32,27 @@ import static org.example.models.dto.Roles.*;
 @RequestMapping("/udalosti/")
 public class InsuranceEventController {
 
-    private InsuranceService insuranceService;
+    private final InsuranceService insuranceService;
 
 
-    private InsuredService insuredService;
+    private final InsuredService insuredService;
 
 
-    private InsuranceMapper insuranceMapper;
+    private final InsuranceMapper insuranceMapper;
 
 
-    private InsuranceRepository insuranceRepository;
+    private final InsuranceRepository insuranceRepository;
 
 
-    private InsuranceEventRepository udalostRepository;
+    private final InsuranceEventRepository udalostRepository;
 
-    private InsuranceEventService udalostService;
-
-
-    private UserRepository userRepository;
+    private final InsuranceEventService udalostService;
 
 
-    private InsuranceEventMapper udalostMapper;
+    private final UserRepository userRepository;
+
+
+    private final InsuranceEventMapper udalostMapper;
 
     public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceMapper insuranceMapper, InsuranceRepository insuranceRepository, InsuranceEventRepository udalostRepository, InsuranceEventService udalostService, UserRepository userRepository, InsuranceEventMapper udalostMapper) {
         this.insuranceService = insuranceService;

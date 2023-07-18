@@ -26,10 +26,10 @@ import static org.example.models.dto.Roles.POJISTNIK;
 public class UserService implements UserDetailsService {
 
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;

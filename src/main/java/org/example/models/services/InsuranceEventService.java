@@ -25,24 +25,24 @@ import java.util.List;
 public class InsuranceEventService {
 
 
-    private InsuranceRepository insuranceRepository;
+    private final InsuranceRepository insuranceRepository;
 
 
-    private InsuredRepository insuredRepository;
+    private final InsuredRepository insuredRepository;
 
 
-    private InsuranceMapper insuranceMapper;
+    private final InsuranceMapper insuranceMapper;
 
 
-    private InsuranceService insuranceService;
+    private final InsuranceService insuranceService;
 
-    private InsuranceEventMapper udalostMapper;
-
-
-    private InsuranceEventRepository udalostRepository;
+    private final InsuranceEventMapper udalostMapper;
 
 
-    private UserRepository userRepository;
+    private final InsuranceEventRepository udalostRepository;
+
+
+    private final UserRepository userRepository;
 
     public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper udalostMapper, InsuranceEventRepository udalostRepository, UserRepository userRepository) {
         this.insuranceRepository = insuranceRepository;

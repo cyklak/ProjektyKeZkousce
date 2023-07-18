@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/account")
 public class AccountController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public AccountController(UserService userService) {
         this.userService = userService;

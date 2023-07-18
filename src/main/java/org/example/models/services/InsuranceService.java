@@ -21,16 +21,16 @@ import java.util.List;
 public class InsuranceService {
 
 
-    private InsuranceRepository insuranceRepository;
+    private final InsuranceRepository insuranceRepository;
 
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
-    private InsuredRepository insuredRepository;
+    private final InsuredRepository insuredRepository;
 
 
-    private InsuranceMapper insuranceMapper;
+    private final InsuranceMapper insuranceMapper;
 
     public InsuranceService(InsuranceRepository insuranceRepository, UserRepository userRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper) {
         this.insuranceRepository = insuranceRepository;

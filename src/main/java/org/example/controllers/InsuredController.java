@@ -29,15 +29,15 @@ import static org.example.models.dto.Roles.POJISTNIK;
 @RequestMapping("/pojistenci/")
 public class InsuredController {
 
-    private InsuredMapper insuredMapper;
+    private final InsuredMapper insuredMapper;
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private InsuredService insuredService;
+    private final InsuredService insuredService;
 
-    private InsuredRepository insuredRepository;
+    private final InsuredRepository insuredRepository;
 
-    private InsuranceService insuranceService;
+    private final InsuranceService insuranceService;
 
     public InsuredController(InsuredMapper insuredMapper, UserRepository userRepository, InsuredService insuredService, InsuredRepository insuredRepository, InsuranceService insuranceService) {
         this.insuredMapper = insuredMapper;

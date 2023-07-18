@@ -26,26 +26,26 @@ import static org.example.models.dto.Roles.POJISTENY;
 public class InsuredService {
 
 
-    private InsuredRepository insuredRepository;
+    private final InsuredRepository insuredRepository;
 
-    private InsuredMapper insuredMapper;
-
-
-    private InsuranceService insuranceService;
+    private final InsuredMapper insuredMapper;
 
 
-    private InsuranceEventService udalostService;
+    private final InsuranceService insuranceService;
 
 
-    private InsuranceEventRepository udalostRepository;
+    private final InsuranceEventService udalostService;
 
 
-    private InsuranceRepository insuranceRepository;
-
-    private UserRepository userRepository;
+    private final InsuranceEventRepository udalostRepository;
 
 
-    private UserService userService;
+    private final InsuranceRepository insuranceRepository;
+
+    private final UserRepository userRepository;
+
+
+    private final UserService userService;
 
     public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceService insuranceService, InsuranceEventService udalostService, InsuranceEventRepository udalostRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) {
         this.insuredRepository = insuredRepository;

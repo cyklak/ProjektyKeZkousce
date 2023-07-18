@@ -30,20 +30,20 @@ import static org.example.models.dto.Roles.POJISTNIK;
 public class InsuranceController {
 
 
-    private InsuredMapper insuredMapper;
+    private final InsuredMapper insuredMapper;
 
-    private InsuredService insuredService;
-
-
-    private InsuranceRepository insuranceRepository;
+    private final InsuredService insuredService;
 
 
-    private InsuranceMapper insuranceMapper;
-
-    private InsuranceService insuranceService;
+    private final InsuranceRepository insuranceRepository;
 
 
-    private UserRepository userRepository;
+    private final InsuranceMapper insuranceMapper;
+
+    private final InsuranceService insuranceService;
+
+
+    private final UserRepository userRepository;
 
     public InsuranceController(InsuredMapper insuredMapper, InsuredService insuredService, InsuranceRepository insuranceRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, UserRepository userRepository) {
         this.insuredMapper = insuredMapper;
