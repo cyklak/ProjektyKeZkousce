@@ -1,21 +1,16 @@
 package org.example.controllers;
 
-import jakarta.servlet.ServletException;
 import jakarta.validation.Valid;
-import org.example.data.entities.PojistenecEntity;
 import org.example.data.entities.UserEntity;
 import org.example.data.repositories.PojistenecRepository;
 import org.example.data.repositories.UserRepository;
 import org.example.models.dto.PojistenecDTO;
 import org.example.models.dto.PojisteniDTO;
-import org.example.models.dto.UserDTO;
 import org.example.models.dto.mappers.PojistenecMapper;
 import org.example.models.dto.mappers.PojisteniMapper;
 import org.example.models.exceptions.DuplicateEmailException;
 import org.example.models.exceptions.PojistenecNotFoundException;
-import org.example.models.services.PojistenecService;
-import org.example.models.services.PojisteniService;
-import org.example.models.services.UserService;
+import org.example.models.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,25 +28,16 @@ import static org.example.models.dto.Role.POJISTNIK;
 
 @Controller
 @RequestMapping("/pojistenci/")
-public class PojistenecController {
-    @Autowired
+public class InsuredController {
     private PojistenecMapper pojistenecMapper;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PojistenecService pojistenecService;
 
-    @Autowired
-    private PojisteniMapper pojisteniMapper;
+    private final PojistenecServiceImpl pojistenecService = new PojistenecServiceImpl();
 
-    @Autowired
     private PojistenecRepository pojistenecRepository;
-    @Autowired
-    private PojisteniService pojisteniService;
+
+    private final PojisteniServiceImpl pojisteniService = new PojisteniServiceImpl();
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
     @GetMapping("stranka/{currentPage}")
