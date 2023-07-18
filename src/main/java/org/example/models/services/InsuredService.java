@@ -30,28 +30,17 @@ public class InsuredService {
 
     private final InsuredMapper insuredMapper;
 
-
-    private final InsuranceService insuranceService;
-
-
-    private final InsuranceEventService udalostService;
-
-
     private final InsuranceEventRepository udalostRepository;
-
 
     private final InsuranceRepository insuranceRepository;
 
     private final UserRepository userRepository;
 
-
     private final UserService userService;
 
-    public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceService insuranceService, InsuranceEventService udalostService, InsuranceEventRepository udalostRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) {
+    public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceEventRepository udalostRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) {
         this.insuredRepository = insuredRepository;
         this.insuredMapper = insuredMapper;
-        this.insuranceService = insuranceService;
-        this.udalostService = udalostService;
         this.udalostRepository = udalostRepository;
         this.insuranceRepository = insuranceRepository;
         this.userRepository = userRepository;
@@ -84,6 +73,10 @@ public class InsuredService {
         return StreamSupport.stream(insuredRepository.findAll().spliterator(), false)
                 .map(i -> insuredMapper.toDTO(i))
                 .toList();
+    }
+
+    public Long getInsuredCount() {
+       return insuredRepository.count();
     }
 
 

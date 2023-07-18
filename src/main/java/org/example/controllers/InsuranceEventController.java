@@ -34,34 +34,16 @@ public class InsuranceEventController {
 
     private final InsuranceService insuranceService;
 
-
     private final InsuredService insuredService;
-
-
-    private final InsuranceMapper insuranceMapper;
-
-
-    private final InsuranceRepository insuranceRepository;
-
-
-    private final InsuranceEventRepository udalostRepository;
 
     private final InsuranceEventService udalostService;
 
-
-    private final UserRepository userRepository;
-
-
     private final InsuranceEventMapper udalostMapper;
 
-    public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceMapper insuranceMapper, InsuranceRepository insuranceRepository, InsuranceEventRepository udalostRepository, InsuranceEventService udalostService, UserRepository userRepository, InsuranceEventMapper udalostMapper) {
+    public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceEventService udalostService, InsuranceEventMapper udalostMapper) {
         this.insuranceService = insuranceService;
         this.insuredService = insuredService;
-        this.insuranceMapper = insuranceMapper;
-        this.insuranceRepository = insuranceRepository;
-        this.udalostRepository = udalostRepository;
         this.udalostService = udalostService;
-        this.userRepository = userRepository;
         this.udalostMapper = udalostMapper;
     }
 
@@ -77,12 +59,12 @@ public class InsuranceEventController {
         if (user.isAdmin()) {
             udalosti = udalostService.getUdalosti(currentPage - 1);
 
-            if (udalostRepository.count() > 10) {
+            if (udalostService.getEventCount() > 10) {
                 model.addAttribute("soucasnaStrana", currentPage);
             }
-            if (udalostRepository.count() > (currentPage * 10)) {
+            if (udalostService.getEventCount() > (currentPage * 10)) {
                 model.addAttribute("pristiStrana", currentPage + 1);
-                if (udalostRepository.count() > (currentPage * 10) + 10) {
+                if (udalostService.getEventCount() > (currentPage * 10) + 10) {
                     model.addAttribute("prespristiStrana", currentPage + 2);
                 }
             }
@@ -115,7 +97,7 @@ public class InsuranceEventController {
                                Model model
     ) {
         InsuranceEventDTO udalost = udalostService.getById(udalostId);
-        List<InsuranceEntity> seznamPojisteni = udalostRepository.findById(udalostId).get().getPojisteni();
+        List<InsuranceDTO> seznamPojisteni = udalostService.getInsurancesByEventId(udalostId);
         model.addAttribute("udalost", udalost);
         model.addAttribute("seznamPojisteni", seznamPojisteni);
         model.addAttribute("udalostiAktivni", 1);

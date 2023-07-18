@@ -10,7 +10,6 @@ import org.example.models.dto.mappers.InsuredMapper;
 import org.example.models.exceptions.DuplicateEmailException;
 import org.example.models.exceptions.InsuredNotFoundException;
 import org.example.models.services.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -31,19 +30,16 @@ public class InsuredController {
 
     private final InsuredMapper insuredMapper;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     private final InsuredService insuredService;
 
-    private final InsuredRepository insuredRepository;
-
     private final InsuranceService insuranceService;
 
-    public InsuredController(InsuredMapper insuredMapper, UserRepository userRepository, InsuredService insuredService, InsuredRepository insuredRepository, InsuranceService insuranceService) {
+    public InsuredController(InsuredMapper insuredMapper, UserService userService, InsuredService insuredService, InsuranceService insuranceService) {
         this.insuredMapper = insuredMapper;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.insuredService = insuredService;
-        this.insuredRepository = insuredRepository;
         this.insuranceService = insuranceService;
     }
 
@@ -64,12 +60,12 @@ public class InsuredController {
         }
         model.addAttribute("pojistenci", pojistenci);
         if (user.isAdmin()) {
-            if (insuredRepository.count() > 10) {
+            if (insuredService.getInsuredCount() > 10) {
                 model.addAttribute("soucasnaStrana", currentPage);
             }
-            if (insuredRepository.count() > (currentPage * 10)) {
+            if (insuredService.getInsuredCount() > (currentPage * 10)) {
                 model.addAttribute("pristiStrana", currentPage + 1);
-                if (insuredRepository.count() > (currentPage * 10) + 10) {
+                if (insuredService.getInsuredCount() > (currentPage * 10) + 10) {
                     model.addAttribute("prespristiStrana", currentPage + 2);
                 }
             }
@@ -130,8 +126,8 @@ public class InsuredController {
                                Model model
     ) {
         InsuredDTO pojistenec = insuredService.getById(pojistenecId);
-        UserEntity pojistnik = userRepository.findById(pojistenec.getPojistnikId()).orElseThrow();
-        model.addAttribute("pojistnik", pojistnik);
+        String email = userService.getPojistnikEmail(pojistenec.getPojistnikId());
+        model.addAttribute("email", email);
         model.addAttribute("pojistenec", pojistenec);
         List<InsuranceDTO> pojisteni = insuranceService.getAllByPojistenecId(pojistenecId);
         model.addAttribute("pojisteni", pojisteni);

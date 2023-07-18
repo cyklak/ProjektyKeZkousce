@@ -45,6 +45,10 @@ public class InsuranceService {
         insuranceRepository.save(newPojisteni);
     }
 
+    public Long getInsuranceCount() {
+        return insuranceRepository.count();
+    }
+
 
     public List<InsuranceDTO> getAllByPojistenecId(Long pojistenecId) {
         List<InsuranceEntity> seznamPojisteni = insuredRepository.findById(pojistenecId).orElseThrow().getSeznamPojisteni();

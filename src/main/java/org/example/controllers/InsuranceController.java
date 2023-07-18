@@ -29,29 +29,17 @@ import static org.example.models.dto.Roles.POJISTNIK;
 @RequestMapping("/pojisteni/")
 public class InsuranceController {
 
-
-    private final InsuredMapper insuredMapper;
-
     private final InsuredService insuredService;
-
-
-    private final InsuranceRepository insuranceRepository;
-
 
     private final InsuranceMapper insuranceMapper;
 
     private final InsuranceService insuranceService;
 
 
-    private final UserRepository userRepository;
-
-    public InsuranceController(InsuredMapper insuredMapper, InsuredService insuredService, InsuranceRepository insuranceRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, UserRepository userRepository) {
-        this.insuredMapper = insuredMapper;
+    public InsuranceController(InsuredService insuredService, InsuranceMapper insuranceMapper, InsuranceService insuranceService) {
         this.insuredService = insuredService;
-        this.insuranceRepository = insuranceRepository;
         this.insuranceMapper = insuranceMapper;
         this.insuranceService = insuranceService;
-        this.userRepository = userRepository;
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
@@ -71,12 +59,12 @@ public class InsuranceController {
         }
         model.addAttribute("pojisteni", pojisteni);
         if (user.isAdmin()) {
-            if (insuranceRepository.count() > 10) {
+            if (insuranceService.getInsuranceCount() > 10) {
                 model.addAttribute("soucasnaStrana", currentPage);
             }
-            if (insuranceRepository.count() > (currentPage * 10)) {
+            if (insuranceService.getInsuranceCount() > (currentPage * 10)) {
                 model.addAttribute("pristiStrana", currentPage + 1);
-                if (insuranceRepository.count() > (currentPage * 10) + 10) {
+                if (insuranceService.getInsuranceCount() > (currentPage * 10) + 10) {
                     model.addAttribute("prespristiStrana", currentPage + 2);
                 }
             }

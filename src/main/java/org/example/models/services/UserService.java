@@ -88,6 +88,10 @@ public class UserService implements UserDetailsService {
         return userEntity;
     }
 
+    public String getPojistnikEmail(Long id) {
+       return userRepository.findById(id).orElseThrow().getEmail();
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)

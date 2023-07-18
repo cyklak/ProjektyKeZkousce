@@ -39,19 +39,17 @@ public class InsuranceEventService {
     private final InsuranceEventMapper udalostMapper;
 
 
-    private final InsuranceEventRepository udalostRepository;
+    private final InsuranceEventRepository eventRepository;
 
 
-    private final UserRepository userRepository;
 
-    public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper udalostMapper, InsuranceEventRepository udalostRepository, UserRepository userRepository) {
+    public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper udalostMapper, InsuranceEventRepository eventRepository) {
         this.insuranceRepository = insuranceRepository;
         this.insuredRepository = insuredRepository;
         this.insuranceMapper = insuranceMapper;
         this.insuranceService = insuranceService;
         this.udalostMapper = udalostMapper;
-        this.udalostRepository = udalostRepository;
-        this.userRepository = userRepository;
+        this.eventRepository = eventRepository;
     }
 
 
@@ -69,19 +67,23 @@ public class InsuranceEventService {
             udalostEntity.setPojistnikId(user.getPojistenec().getPojistnikId());
         udalostEntity.setJmenoPojisteneho(insuredRepository.findById(pojistenecId).get().getJmeno());
         udalostEntity.setPrijmeniPojisteneho(insuredRepository.findById(pojistenecId).get().getPrijmeni());
-        udalostRepository.save(udalostEntity);
+        eventRepository.save(udalostEntity);
 
     }
 
 
     public List<InsuranceEventDTO> getUdalosti(int currentPage) {
-        Page<InsuranceEventEntity> pageOfPeople = udalostRepository.findAll(PageRequest.of(currentPage, 10));
+        Page<InsuranceEventEntity> pageOfPeople = eventRepository.findAll(PageRequest.of(currentPage, 10));
         List<InsuranceEventEntity> udalostEntities = pageOfPeople.getContent();
         List<InsuranceEventDTO> result = new ArrayList<>();
         for (InsuranceEventEntity e : udalostEntities) {
             result.add(udalostMapper.toDTO(e));
         }
         return result;
+    }
+
+    public Long getEventCount() {
+        return eventRepository.count();
     }
 
 
@@ -92,14 +94,14 @@ public class InsuranceEventService {
     }
 
     private InsuranceEventEntity getUdalostOrThrow(long pojistnaUdalostID) {
-        return udalostRepository
+        return eventRepository
                 .findById(pojistnaUdalostID)
                 .orElseThrow(EventNotFoundException::new);
     }
 
 
     public List<InsuranceEventDTO> getUdalostibyPojistenecId(int currentPage, Long pojistenecId) {
-        Page<InsuranceEventEntity> pageOfPeople = udalostRepository.findAllBypojistenecId(PageRequest.of(currentPage, 10), pojistenecId);
+        Page<InsuranceEventEntity> pageOfPeople = eventRepository.findAllBypojistenecId(PageRequest.of(currentPage, 10), pojistenecId);
         List<InsuranceEventEntity> udalostEntities = pageOfPeople.getContent();
         List<InsuranceEventDTO> result = new ArrayList<>();
         for (InsuranceEventEntity e : udalostEntities) {
@@ -110,12 +112,21 @@ public class InsuranceEventService {
 
 
     public List<InsuranceEventDTO> getUdalostiByUserId(long userId) {
-        List<InsuranceEventEntity> seznamUdalosti = udalostRepository.findAllBypojistnikId(userId);
+        List<InsuranceEventEntity> seznamUdalosti = eventRepository.findAllBypojistnikId(userId);
         List<InsuranceEventDTO> result = new ArrayList<>();
         for (InsuranceEventEntity udalost : seznamUdalosti) {
             result.add(udalostMapper.toDTO(udalost));
         }
         return result;
+    }
+
+    public List<InsuranceDTO> getInsurancesByEventId(Long eventId) {
+        InsuranceEventEntity event = getUdalostOrThrow(eventId);
+        List<InsuranceDTO> insurances = new ArrayList<>();
+        for (InsuranceEntity insurance: event.getPojisteni()) {
+            insurances.add(insuranceMapper.toDTO(insurance));
+        }
+        return insurances;
     }
 
 
@@ -135,7 +146,7 @@ public class InsuranceEventService {
             fetchedUdalost.setPojistnikId(user.getUserId());
         else
             fetchedUdalost.setPojistnikId(user.getPojistenec().getPojistnikId());
-        udalostRepository.save(fetchedUdalost);
+        eventRepository.save(fetchedUdalost);
 
     }
 
@@ -153,7 +164,7 @@ public class InsuranceEventService {
 
     public void remove(long udalostId) {
         InsuranceEventEntity fetchedEntity = getUdalostOrThrow(udalostId);
-        udalostRepository.delete(fetchedEntity);
+        eventRepository.delete(fetchedEntity);
     }
 
 }
