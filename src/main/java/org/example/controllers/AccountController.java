@@ -21,7 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-    private final UserServiceImpl userServiceImpl = new UserServiceImpl(); //pak by se třída UserServiceImpl dala rovnou přejmenovat na UserService?
+    private final UserServiceImpl userServiceImpl = new UserServiceImpl();
 
     @GetMapping("login")
     public String renderLogin() {

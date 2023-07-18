@@ -20,12 +20,6 @@ import java.util.List;
 @RequestMapping("/")
 public class HomeController {
 
-    @Autowired
-    private PojistenecRepository pojistenecRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
     @GetMapping
     public String renderIndex() {
         return "pages/home/index";
