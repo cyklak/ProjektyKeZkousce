@@ -10,13 +10,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+
 public class ApplicationSecurityConfiguration {
+    /**
+     * Access to all pages allowed without authentication (rules are defined directly in controllers)
+     * @param http
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests()
                 .anyRequest()
-                .permitAll() // <-- Všechny stránky povolíme (pravidla budeme definovat přímo v kontroleru)
+                .permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/account/login")
