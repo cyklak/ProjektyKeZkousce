@@ -9,7 +9,6 @@ import org.example.data.repositories.UserRepository;
 import org.example.models.dto.InsuranceDTO;
 import org.example.models.dto.mappers.InsuranceMapper;
 import org.example.models.exceptions.InsuranceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,24 @@ import java.util.List;
 @Service
 public class InsuranceService {
 
-    @Autowired
+
     private InsuranceRepository insuranceRepository;
 
-    @Autowired
+
     private UserRepository userRepository;
 
-    @Autowired
+
     private InsuredRepository insuredRepository;
 
-    @Autowired
+
     private InsuranceMapper insuranceMapper;
+
+    public InsuranceService(InsuranceRepository insuranceRepository, UserRepository userRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper) {
+        this.insuranceRepository = insuranceRepository;
+        this.userRepository = userRepository;
+        this.insuredRepository = insuredRepository;
+        this.insuranceMapper = insuranceMapper;
+    }
 
 
     public void create(InsuranceDTO pojisteni) {

@@ -13,7 +13,6 @@ import org.example.models.dto.Roles;
 import org.example.models.dto.mappers.InsuranceMapper;
 import org.example.models.dto.mappers.InsuranceEventMapper;
 import org.example.models.exceptions.EventNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,26 +24,35 @@ import java.util.List;
 @Service
 public class InsuranceEventService {
 
-    @Autowired
+
     private InsuranceRepository insuranceRepository;
 
-    @Autowired
+
     private InsuredRepository insuredRepository;
 
-    @Autowired
+
     private InsuranceMapper insuranceMapper;
 
-    @Autowired
+
     private InsuranceService insuranceService;
-    @Autowired
+
     private InsuranceEventMapper udalostMapper;
 
-    @Autowired
+
     private InsuranceEventRepository udalostRepository;
 
-    @Autowired
+
     private UserRepository userRepository;
 
+    public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper udalostMapper, InsuranceEventRepository udalostRepository, UserRepository userRepository) {
+        this.insuranceRepository = insuranceRepository;
+        this.insuredRepository = insuredRepository;
+        this.insuranceMapper = insuranceMapper;
+        this.insuranceService = insuranceService;
+        this.udalostMapper = udalostMapper;
+        this.udalostRepository = udalostRepository;
+        this.userRepository = userRepository;
+    }
 
 
     public void create(InsuranceEventDTO udalost, Long pojistenecId) {

@@ -15,7 +15,6 @@ import org.example.models.exceptions.EventNotFoundException;
 import org.example.models.services.InsuredService;
 import org.example.models.services.InsuranceService;
 import org.example.models.services.InsuranceEventService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -32,28 +31,39 @@ import static org.example.models.dto.Roles.*;
 @Controller
 @RequestMapping("/udalosti/")
 public class InsuranceEventController {
-    @Autowired
+
     private InsuranceService insuranceService;
 
-    @Autowired
+
     private InsuredService insuredService;
 
-    @Autowired
+
     private InsuranceMapper insuranceMapper;
 
-    @Autowired
+
     private InsuranceRepository insuranceRepository;
 
-    @Autowired
+
     private InsuranceEventRepository udalostRepository;
-    @Autowired
+
     private InsuranceEventService udalostService;
 
-    @Autowired
+
     private UserRepository userRepository;
 
-    @Autowired
+
     private InsuranceEventMapper udalostMapper;
+
+    public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceMapper insuranceMapper, InsuranceRepository insuranceRepository, InsuranceEventRepository udalostRepository, InsuranceEventService udalostService, UserRepository userRepository, InsuranceEventMapper udalostMapper) {
+        this.insuranceService = insuranceService;
+        this.insuredService = insuredService;
+        this.insuranceMapper = insuranceMapper;
+        this.insuranceRepository = insuranceRepository;
+        this.udalostRepository = udalostRepository;
+        this.udalostService = udalostService;
+        this.userRepository = userRepository;
+        this.udalostMapper = udalostMapper;
+    }
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
     @GetMapping("stranka/{currentPage}")

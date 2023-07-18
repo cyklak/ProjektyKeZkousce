@@ -5,7 +5,6 @@ import org.example.models.dto.UserDTO;
 import org.example.models.exceptions.DuplicateEmailException;
 import org.example.models.exceptions.PasswordsDoNotEqualException;
 import org.example.models.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +16,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-    @Autowired
+
     private UserService userService;
+
+    public AccountController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("login")
     public String renderLogin() {

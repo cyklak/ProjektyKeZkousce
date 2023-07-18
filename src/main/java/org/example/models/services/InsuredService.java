@@ -11,7 +11,6 @@ import org.example.data.repositories.UserRepository;
 import org.example.models.dto.InsuredDTO;
 import org.example.models.dto.mappers.InsuredMapper;
 import org.example.models.exceptions.InsuredNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,27 +25,38 @@ import static org.example.models.dto.Roles.POJISTENY;
 @Service
 public class InsuredService {
 
-    @Autowired
+
     private InsuredRepository insuredRepository;
-    @Autowired
+
     private InsuredMapper insuredMapper;
 
-    @Autowired
+
     private InsuranceService insuranceService;
 
-    @Autowired
+
     private InsuranceEventService udalostService;
 
-    @Autowired
+
     private InsuranceEventRepository udalostRepository;
 
-    @Autowired
+
     private InsuranceRepository insuranceRepository;
-    @Autowired
+
     private UserRepository userRepository;
 
-    @Autowired
+
     private UserService userService;
+
+    public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceService insuranceService, InsuranceEventService udalostService, InsuranceEventRepository udalostRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) {
+        this.insuredRepository = insuredRepository;
+        this.insuredMapper = insuredMapper;
+        this.insuranceService = insuranceService;
+        this.udalostService = udalostService;
+        this.udalostRepository = udalostRepository;
+        this.insuranceRepository = insuranceRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+    }
 
 
     public String create(InsuredDTO pojistenec) {

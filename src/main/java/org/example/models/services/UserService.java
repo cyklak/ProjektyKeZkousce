@@ -7,7 +7,6 @@ import org.example.models.dto.Roles;
 import org.example.models.dto.UserDTO;
 import org.example.models.exceptions.DuplicateEmailException;
 import org.example.models.exceptions.PasswordsDoNotEqualException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,11 +25,16 @@ import static org.example.models.dto.Roles.POJISTNIK;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
+
     private UserRepository userRepository;
 
-    @Autowired
+
     private PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     public void create(UserDTO user) {

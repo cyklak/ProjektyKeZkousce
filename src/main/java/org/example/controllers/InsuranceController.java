@@ -12,7 +12,6 @@ import org.example.models.dto.mappers.InsuredMapper;
 import org.example.models.exceptions.InsuranceNotFoundException;
 import org.example.models.services.InsuredService;
 import org.example.models.services.InsuranceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -30,21 +29,30 @@ import static org.example.models.dto.Roles.POJISTNIK;
 @RequestMapping("/pojisteni/")
 public class InsuranceController {
 
-    @Autowired
+
     private InsuredMapper insuredMapper;
-    @Autowired
+
     private InsuredService insuredService;
 
-    @Autowired
+
     private InsuranceRepository insuranceRepository;
 
-    @Autowired
+
     private InsuranceMapper insuranceMapper;
-    @Autowired
+
     private InsuranceService insuranceService;
 
-    @Autowired
+
     private UserRepository userRepository;
+
+    public InsuranceController(InsuredMapper insuredMapper, InsuredService insuredService, InsuranceRepository insuranceRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, UserRepository userRepository) {
+        this.insuredMapper = insuredMapper;
+        this.insuredService = insuredService;
+        this.insuranceRepository = insuranceRepository;
+        this.insuranceMapper = insuranceMapper;
+        this.insuranceService = insuranceService;
+        this.userRepository = userRepository;
+    }
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
     @GetMapping("stranka/{currentPage}")

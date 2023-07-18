@@ -28,16 +28,24 @@ import static org.example.models.dto.Roles.POJISTNIK;
 @Controller
 @RequestMapping("/pojistenci/")
 public class InsuredController {
-    @Autowired
+
     private InsuredMapper insuredMapper;
-    @Autowired
+
     private UserRepository userRepository;
-    @Autowired
+
     private InsuredService insuredService;
-    @Autowired
+
     private InsuredRepository insuredRepository;
-    @Autowired
+
     private InsuranceService insuranceService;
+
+    public InsuredController(InsuredMapper insuredMapper, UserRepository userRepository, InsuredService insuredService, InsuredRepository insuredRepository, InsuranceService insuranceService) {
+        this.insuredMapper = insuredMapper;
+        this.userRepository = userRepository;
+        this.insuredService = insuredService;
+        this.insuredRepository = insuredRepository;
+        this.insuranceService = insuranceService;
+    }
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
     @GetMapping("stranka/{currentPage}")
