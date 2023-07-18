@@ -8,6 +8,14 @@ target/
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/codestream.xml
+.idea/dbnavigator.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/uiDesigner.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/workspace-HpVictus.xml
 *.iws
 *.iml
 *.ipr
