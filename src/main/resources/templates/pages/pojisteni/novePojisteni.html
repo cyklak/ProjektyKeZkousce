@@ -9,7 +9,7 @@
         <h3 th:text="'Přidat pojištění k ' + ${pojistenec.jmeno} + ' ' + ${pojistenec.prijmeni}" class="py-4"></h3>
     </header>
     <section>
-        <form method="post" th:action="@{'/pojisteni/' + ${pojistenecId} + '/novePojisteni'}" th:object="${pojisteniDTO}">
+        <form method="post" th:action="@{'/pojisteni/' + ${pojistenecId} + '/novePojisteni'}" th:object="${insuranceDTO}">
             <div class="form-row col-xl-8 col-sm">
                 <div class="form-group col">
                     <label for="typPojisteni">Pojištění</label>

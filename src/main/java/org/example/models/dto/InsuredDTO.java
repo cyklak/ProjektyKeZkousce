@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public class PojistenecDTO {
+public class InsuredDTO {
 
     private long pojistenecId;
     @NotBlank(message = "Vyplňte jméno")

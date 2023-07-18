@@ -9,7 +9,7 @@
         <h3 th:text="'Nová událost k ' + ${pojistenec.jmeno} + ' ' + ${pojistenec.prijmeni}" class="py-4"></h3>
     </header>
     <section>
-        <form method="post" th:action="@{'/udalosti/novaUdalost'}" th:object="${pojistnaUdalostDTO}">
+        <form method="post" th:action="@{'/udalosti/novaUdalost'}" th:object="${insuranceEventDTO}">
             <div class="form-row col">
                 <div class="form-group">
                     <label for="nazevUdalosti">Název události</label>

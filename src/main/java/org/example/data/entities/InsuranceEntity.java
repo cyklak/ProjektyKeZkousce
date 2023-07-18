@@ -1,15 +1,13 @@
 package org.example.data.entities;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "seznam_pojisteni")
-public class PojisteniEntity {
+public class InsuranceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long pojisteniId;
@@ -31,10 +29,10 @@ public class PojisteniEntity {
 
     @ManyToOne
     @JoinColumn(name = "pojistenecId")
-    private PojistenecEntity pojistenec;
+    private InsuredEntity pojistenec;
 
     @ManyToMany (mappedBy = "pojisteni")
-    private List<PojistnaUdalostEntity> seznamUdalosti;
+    private List<InsuranceEventEntity> seznamUdalosti;
 
     public long getPojisteniId() {
         return pojisteniId;
@@ -84,19 +82,19 @@ public class PojisteniEntity {
         this.platnostDo = platnostDo;
     }
 
-    public PojistenecEntity getPojistenec() {
+    public InsuredEntity getPojistenec() {
         return pojistenec;
     }
 
-    public void setPojistenec(PojistenecEntity pojistenec) {
+    public void setPojistenec(InsuredEntity pojistenec) {
         this.pojistenec = pojistenec;
     }
 
-    public List<PojistnaUdalostEntity> getSeznamUdalosti() {
+    public List<InsuranceEventEntity> getSeznamUdalosti() {
         return seznamUdalosti;
     }
 
-    public void setSeznamUdalosti(List<PojistnaUdalostEntity> seznamUdalosti) {
+    public void setSeznamUdalosti(List<InsuranceEventEntity> seznamUdalosti) {
         this.seznamUdalosti = seznamUdalosti;
     }
 

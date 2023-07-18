@@ -1,17 +1,17 @@
 package org.example.controllers;
 
 import jakarta.validation.Valid;
-import org.example.data.entities.PojisteniEntity;
+import org.example.data.entities.InsuranceEntity;
 import org.example.data.entities.UserEntity;
-import org.example.data.repositories.PojisteniRepository;
+import org.example.data.repositories.InsuranceRepository;
 import org.example.data.repositories.UserRepository;
-import org.example.models.dto.PojistenecDTO;
-import org.example.models.dto.PojisteniDTO;
-import org.example.models.dto.mappers.PojistenecMapper;
-import org.example.models.dto.mappers.PojisteniMapper;
-import org.example.models.exceptions.PojisteniNotFoundException;
-import org.example.models.services.PojistenecService;
-import org.example.models.services.PojisteniService;
+import org.example.models.dto.InsuranceDTO;
+import org.example.models.dto.InsuredDTO;
+import org.example.models.dto.mappers.InsuranceMapper;
+import org.example.models.dto.mappers.InsuredMapper;
+import org.example.models.exceptions.InsuranceNotFoundException;
+import org.example.models.services.InsuredService;
+import org.example.models.services.InsuranceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,24 +24,24 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.models.dto.Role.POJISTNIK;
+import static org.example.models.dto.Roles.POJISTNIK;
 
 @Controller
 @RequestMapping("/pojisteni/")
-public class PojisteniController {
+public class InsuranceController {
 
     @Autowired
-    private PojistenecMapper pojistenecMapper;
+    private InsuredMapper insuredMapper;
     @Autowired
-    private PojistenecService pojistenecService;
+    private InsuredService insuredService;
 
     @Autowired
-    private PojisteniRepository pojisteniRepository;
+    private InsuranceRepository insuranceRepository;
 
     @Autowired
-    private PojisteniMapper pojisteniMapper;
+    private InsuranceMapper insuranceMapper;
     @Autowired
-    private PojisteniService pojisteniService;
+    private InsuranceService insuranceService;
 
     @Autowired
     private UserRepository userRepository;
@@ -51,24 +51,24 @@ public class PojisteniController {
     public String renderIndex(Model model, @PathVariable int currentPage) {
         model.addAttribute("pojisteniAktivni", 1);
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<PojisteniDTO> pojisteni = new ArrayList<>();
+        List<InsuranceDTO> pojisteni = new ArrayList<>();
         if (user.isAdmin()) {
-            pojisteni = pojisteniService.getPojisteni(currentPage - 1);
+            pojisteni = insuranceService.getPojisteni(currentPage - 1);
         } else if (user.getRole().contains(POJISTNIK)) {
-            pojisteni = pojisteniService.getPojisteniByUserId(user.getUserId());
+            pojisteni = insuranceService.getPojisteniByUserId(user.getUserId());
             model.addAttribute("paginace", 1);
         } else {
-            pojisteni = pojisteniService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
+            pojisteni = insuranceService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
             model.addAttribute("paginace", 1);
         }
         model.addAttribute("pojisteni", pojisteni);
         if (user.isAdmin()) {
-            if (pojisteniRepository.count() > 10) {
+            if (insuranceRepository.count() > 10) {
                 model.addAttribute("soucasnaStrana", currentPage);
             }
-            if (pojisteniRepository.count() > (currentPage * 10)) {
+            if (insuranceRepository.count() > (currentPage * 10)) {
                 model.addAttribute("pristiStrana", currentPage + 1);
-                if (pojisteniRepository.count() > (currentPage * 10) + 10) {
+                if (insuranceRepository.count() > (currentPage * 10) + 10) {
                     model.addAttribute("prespristiStrana", currentPage + 2);
                 }
             }
@@ -85,10 +85,10 @@ public class PojisteniController {
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK"})
     @GetMapping("{pojistenecId}/novePojisteni")
     public String renderNovePojisteni(
-            @PathVariable long pojistenecId, @ModelAttribute PojisteniDTO pojisteni,
+            @PathVariable long pojistenecId, @ModelAttribute InsuranceDTO pojisteni,
             Model model
     ) {
-        PojistenecDTO pojistenec = pojistenecService.getById(pojistenecId);
+        InsuredDTO pojistenec = insuredService.getById(pojistenecId);
         model.addAttribute("pojistenec", pojistenec);
         model.addAttribute("pojisteniAktivni", 1);
 
@@ -98,7 +98,7 @@ public class PojisteniController {
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK"})
     @PostMapping("{pojistenecId}/novePojisteni")
     public String createNovePojisteni(
-            @Valid @ModelAttribute PojisteniDTO pojisteni, BindingResult result, @PathVariable long pojistenecId, Model model,
+            @Valid @ModelAttribute InsuranceDTO pojisteni, BindingResult result, @PathVariable long pojistenecId, Model model,
             RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors())
@@ -107,8 +107,8 @@ public class PojisteniController {
             result.rejectValue("platnostDo", "error", "Platnost do nemůže být menší než platnost od.");
             return renderNovePojisteni(pojistenecId, pojisteni, model);
         }
-        pojisteni.setPojistenec(pojistenecService.getById(pojistenecId));
-        pojisteniService.create(pojisteni);
+        pojisteni.setPojistenec(insuredService.getById(pojistenecId));
+        insuranceService.create(pojisteni);
         redirectAttributes.addFlashAttribute("success", "Pojištění bylo vytvořeno.");
         return "redirect:/pojistenci/{pojistenecId}";
     }
@@ -117,9 +117,9 @@ public class PojisteniController {
     @GetMapping("{pojistenecId}/delete/{pojisteniId}")
     public String deletePojisteni(@PathVariable long pojistenecId, @PathVariable long pojisteniId,
                                   RedirectAttributes redirectAttributes) {
-        PojisteniEntity pojisteni = pojisteniService.getPojisteniEntity(pojisteniId);
+        InsuranceEntity pojisteni = insuranceService.getPojisteniEntity(pojisteniId);
         if (pojisteni.getSeznamUdalosti().isEmpty()) {
-            pojisteniService.remove(pojisteniId);
+            insuranceService.remove(pojisteniId);
             redirectAttributes.addFlashAttribute("success", "Pojištění bylo smazáno.");
         } else
             redirectAttributes.addFlashAttribute("error", "K pojištění se již váže alespoň jedna pojistná událost.");
@@ -130,13 +130,13 @@ public class PojisteniController {
     @GetMapping("{pojistenecId}/edit/{pojisteniId}")
     public String renderEditForm(
             @PathVariable Long pojistenecId, @PathVariable long pojisteniId,
-            PojisteniDTO pojisteni, Model model
+            InsuranceDTO pojisteni, Model model
     ) {
 
-        PojisteniDTO fetchedPojisteni = pojisteniService.getById(pojisteniId);
-        PojistenecDTO pojistenec = pojistenecService.getById(pojistenecId);
+        InsuranceDTO fetchedPojisteni = insuranceService.getById(pojisteniId);
+        InsuredDTO pojistenec = insuredService.getById(pojistenecId);
         model.addAttribute("pojistenec", pojistenec);
-        pojisteniMapper.updatePojisteniDTO(fetchedPojisteni, pojisteni);
+        insuranceMapper.updatePojisteniDTO(fetchedPojisteni, pojisteni);
         model.addAttribute("pojisteniAktivni", 1);
         return "pages/pojisteni/edit";
     }
@@ -145,7 +145,7 @@ public class PojisteniController {
     @PostMapping("{pojistenecId}/edit/{pojisteniId}")
     public String editPojisteni(
             @PathVariable long pojistenecId, @PathVariable long pojisteniId,
-            @Valid PojisteniDTO pojisteni,
+            @Valid InsuranceDTO pojisteni,
             BindingResult result,
             RedirectAttributes redirectAttributes, Model model
     ) {
@@ -156,8 +156,8 @@ public class PojisteniController {
             return renderNovePojisteni(pojistenecId, pojisteni, model);
         }
         pojisteni.setPojisteniId(pojisteniId);
-        pojisteni.setPojistenec(pojistenecService.getById(pojistenecId));
-        pojisteniService.edit(pojisteni);
+        pojisteni.setPojistenec(insuredService.getById(pojistenecId));
+        insuranceService.edit(pojisteni);
         redirectAttributes.addFlashAttribute("success", "Aplikovatelné změny byly provedeny.");
         return "redirect:/pojistenci/{pojistenecId}";
     }
@@ -168,9 +168,9 @@ public class PojisteniController {
             @PathVariable long pojistenecId, @PathVariable long pojisteniId,
             Model model
     ) {
-        PojistenecDTO pojistenec = pojistenecService.getById(pojistenecId);
+        InsuredDTO pojistenec = insuredService.getById(pojistenecId);
         model.addAttribute("pojistenec", pojistenec);
-        PojisteniDTO pojisteni = pojisteniService.getById(pojisteniId);
+        InsuranceDTO pojisteni = insuranceService.getById(pojisteniId);
         model.addAttribute("pojisteni", pojisteni);
         model.addAttribute("pojisteniAktivni", 1);
 
@@ -178,7 +178,7 @@ public class PojisteniController {
     }
 
 
-    @ExceptionHandler({PojisteniNotFoundException.class})
+    @ExceptionHandler({InsuranceNotFoundException.class})
     public String handlePojisteniNotFoundException(
             RedirectAttributes redirectAttributes
     ) {

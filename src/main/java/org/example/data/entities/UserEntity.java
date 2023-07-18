@@ -1,7 +1,7 @@
 package org.example.data.entities;
 
 import jakarta.persistence.*;
-import org.example.models.dto.Role;
+import org.example.models.dto.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,9 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
-import static org.example.models.dto.Role.*;
+import static org.example.models.dto.Roles.*;
 
 
 @Entity
@@ -28,13 +27,13 @@ public class UserEntity implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private List<Role> role;
+    private List<Roles> roles;
 
     @Column(nullable = false)
     private boolean admin;
 
     @OneToOne (mappedBy = "user")
-    private PojistenecEntity pojistenec;
+    private InsuredEntity pojistenec;
 
     // region: UserDetails Methods
     @Override
@@ -53,9 +52,9 @@ public class UserEntity implements UserDetails {
         if (admin) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));}
         else {
-        if (role.contains(POJISTNIK))
+        if (roles.contains(POJISTNIK))
             authorities.add(new SimpleGrantedAuthority("ROLE_POJISTNIK"));
-        if (role.contains(POJISTENY))
+        if (roles.contains(POJISTENY))
             authorities.add(new SimpleGrantedAuthority("ROLE_POJISTENY"));}
 
         return authorities;
@@ -106,20 +105,20 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
-    public PojistenecEntity getPojistenec() {
+    public InsuredEntity getPojistenec() {
         return pojistenec;
     }
 
-    public void setPojistenec(PojistenecEntity pojistenec) {
+    public void setPojistenec(InsuredEntity pojistenec) {
         this.pojistenec = pojistenec;
     }
 
-    public List<Role> getRole() {
-        return role;
+    public List<Roles> getRole() {
+        return roles;
     }
 
-    public void setRole(List<Role> role) {
-        this.role = role;
+    public void setRole(List<Roles> roles) {
+        this.roles = roles;
     }
 
     public boolean isAdmin() {

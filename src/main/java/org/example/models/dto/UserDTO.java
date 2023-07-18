@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import java.util.List;
-
 public class UserDTO {
 
     private long userId;
@@ -24,7 +22,7 @@ public class UserDTO {
     @NotNull(message = "Vyplňte uživatelské heslo")
     @Size(min = 6, message = "Heslo musí mít alespoň 6 znaků")
     private String confirmPassword;
-    private Role role;
+    private Roles roles;
 
 
     //region: getters and setters
@@ -62,12 +60,12 @@ public class UserDTO {
 
 
 
-    public Role getRole() {
-        return role;
+    public Roles getRole() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRole(Roles roles) {
+        this.roles = roles;
     }
     //endregion
 }

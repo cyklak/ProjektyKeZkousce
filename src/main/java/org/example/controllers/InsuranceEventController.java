@@ -1,22 +1,20 @@
 package org.example.controllers;
 
 import jakarta.validation.Valid;
-import org.example.data.entities.PojisteniEntity;
-import org.example.data.entities.PojistnaUdalostEntity;
+import org.example.data.entities.InsuranceEntity;
 import org.example.data.entities.UserEntity;
-import org.example.data.repositories.PojisteniRepository;
-import org.example.data.repositories.PojistnaUdalostRepository;
+import org.example.data.repositories.InsuranceRepository;
+import org.example.data.repositories.InsuranceEventRepository;
 import org.example.data.repositories.UserRepository;
-import org.example.models.dto.PojistenecDTO;
-import org.example.models.dto.PojisteniDTO;
-import org.example.models.dto.PojistnaUdalostDTO;
-import org.example.models.dto.mappers.PojisteniMapper;
-import org.example.models.dto.mappers.PojistnaUdalostMapper;
-import org.example.models.exceptions.PojistenecNotFoundException;
-import org.example.models.exceptions.UdalostNotFoundException;
-import org.example.models.services.PojistenecService;
-import org.example.models.services.PojisteniService;
-import org.example.models.services.PojistnaUdalostService;
+import org.example.models.dto.InsuranceDTO;
+import org.example.models.dto.InsuranceEventDTO;
+import org.example.models.dto.InsuredDTO;
+import org.example.models.dto.mappers.InsuranceMapper;
+import org.example.models.dto.mappers.InsuranceEventMapper;
+import org.example.models.exceptions.EventNotFoundException;
+import org.example.models.services.InsuredService;
+import org.example.models.services.InsuranceService;
+import org.example.models.services.InsuranceEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,33 +27,33 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.models.dto.Role.*;
+import static org.example.models.dto.Roles.*;
 
 @Controller
 @RequestMapping("/udalosti/")
-public class PojistnaUdalostController {
+public class InsuranceEventController {
     @Autowired
-    private PojisteniService pojisteniService;
+    private InsuranceService insuranceService;
 
     @Autowired
-    private PojistenecService pojistenecService;
+    private InsuredService insuredService;
 
     @Autowired
-    private PojisteniMapper pojisteniMapper;
+    private InsuranceMapper insuranceMapper;
 
     @Autowired
-    private PojisteniRepository pojisteniRepository;
+    private InsuranceRepository insuranceRepository;
 
     @Autowired
-    private PojistnaUdalostRepository udalostRepository;
+    private InsuranceEventRepository udalostRepository;
     @Autowired
-    private PojistnaUdalostService udalostService;
+    private InsuranceEventService udalostService;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private PojistnaUdalostMapper udalostMapper;
+    private InsuranceEventMapper udalostMapper;
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
     @GetMapping("stranka/{currentPage}")
@@ -65,7 +63,7 @@ public class PojistnaUdalostController {
     ) {
         model.addAttribute("udalostiAktivni", 1);
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<PojistnaUdalostDTO> udalosti = new ArrayList<>();
+        List<InsuranceEventDTO> udalosti = new ArrayList<>();
         if (user.isAdmin()) {
             udalosti = udalostService.getUdalosti(currentPage - 1);
 
@@ -92,9 +90,9 @@ public class PojistnaUdalostController {
             model.addAttribute("paginace", 1);
         }
         model.addAttribute("udalosti", udalosti);
-        List<PojistenecDTO> pojistenci = new ArrayList<>();
-        for (PojistnaUdalostDTO udalost : udalosti) {
-            pojistenci.add(pojistenecService.getById(udalost.getPojistenecId()));
+        List<InsuredDTO> pojistenci = new ArrayList<>();
+        for (InsuranceEventDTO udalost : udalosti) {
+            pojistenci.add(insuredService.getById(udalost.getPojistenecId()));
         }
         model.addAttribute("pojistenci", pojistenci);
 
@@ -106,8 +104,8 @@ public class PojistnaUdalostController {
     public String renderDetail(@PathVariable long udalostId,
                                Model model
     ) {
-        PojistnaUdalostDTO udalost = udalostService.getById(udalostId);
-        List<PojisteniEntity> seznamPojisteni = udalostRepository.findById(udalostId).get().getPojisteni();
+        InsuranceEventDTO udalost = udalostService.getById(udalostId);
+        List<InsuranceEntity> seznamPojisteni = udalostRepository.findById(udalostId).get().getPojisteni();
         model.addAttribute("udalost", udalost);
         model.addAttribute("seznamPojisteni", seznamPojisteni);
         model.addAttribute("udalostiAktivni", 1);
@@ -118,15 +116,15 @@ public class PojistnaUdalostController {
     @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
     @GetMapping("novaUdalost")
     public String renderNovaUdalost(
-            PojistnaUdalostDTO udalost,
+            InsuranceEventDTO udalost,
             Model model
     ) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PojistenecDTO pojistenec = pojistenecService.getById(user.getPojistenec().getPojistenecId());
-        List<PojisteniDTO> pojisteni = pojisteniService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
+        InsuredDTO pojistenec = insuredService.getById(user.getPojistenec().getPojistenecId());
+        List<InsuranceDTO> pojisteni = insuranceService.getAllByPojistenecId(user.getPojistenec().getPojistenecId());
 
         if (udalost.getNeplatnaPojisteni() != null) {
-            for (PojisteniDTO jednoPojisteni : pojisteni)
+            for (InsuranceDTO jednoPojisteni : pojisteni)
                 if (udalost.getNeplatnaPojisteni().contains(jednoPojisteni.getPojisteniId())) {
                     jednoPojisteni.setAktivni(true);
                     udalost.getPojisteniIds().remove(jednoPojisteni.getPojisteniId());
@@ -141,13 +139,13 @@ public class PojistnaUdalostController {
     @Secured({"ROLE_ADMIN", "ROLE_POJISTENY"})
     @PostMapping("novaUdalost")
     public String createNovaUdalost(
-            @Valid @ModelAttribute PojistnaUdalostDTO udalostDTO, BindingResult result, Model model,
+            @Valid @ModelAttribute InsuranceEventDTO udalostDTO, BindingResult result, Model model,
             RedirectAttributes redirectAttributes
     ) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (result.hasErrors())
             return renderNovaUdalost(udalostDTO, model);
-        List<Long> neplatnaPojisteni = udalostService.filtrujPojisteni(udalostDTO);
+        List<Long> neplatnaPojisteni = udalostService.filterInsurances(udalostDTO);
         if (neplatnaPojisteni.isEmpty()) {
             udalostService.create(udalostDTO, user.getPojistenec().getPojistenecId());
             redirectAttributes.addFlashAttribute("success", "Pojistná událost byla vytvořena.");
@@ -163,15 +161,15 @@ public class PojistnaUdalostController {
     @GetMapping("edit/{pojistnaUdalostId}")
     public String renderEditForm(
             @PathVariable long pojistnaUdalostId,
-            PojistnaUdalostDTO udalostDTO, Model model
+            InsuranceEventDTO udalostDTO, Model model
     ) {
 
-        PojistnaUdalostDTO fetchedUdalost = udalostService.getById(pojistnaUdalostId);
-        PojistenecDTO pojistenec = pojistenecService.getById(udalostService.getById(pojistnaUdalostId).getPojistenecId());
+        InsuranceEventDTO fetchedUdalost = udalostService.getById(pojistnaUdalostId);
+        InsuredDTO pojistenec = insuredService.getById(udalostService.getById(pojistnaUdalostId).getPojistenecId());
         model.addAttribute("pojistenec", pojistenec);
-        List<PojisteniDTO> pojisteni = pojisteniService.getAllByPojistenecId(udalostService.getById(pojistnaUdalostId).getPojistenecId());
+        List<InsuranceDTO> pojisteni = insuranceService.getAllByPojistenecId(udalostService.getById(pojistnaUdalostId).getPojistenecId());
         if (udalostDTO.getNeplatnaPojisteni() != null) {
-            for (PojisteniDTO jednopojisteni : pojisteni)
+            for (InsuranceDTO jednopojisteni : pojisteni)
                 if (udalostDTO.getNeplatnaPojisteni().contains(jednopojisteni.getPojisteniId()))
                     jednopojisteni.setAktivni(true);
         }
@@ -187,14 +185,14 @@ public class PojistnaUdalostController {
     @PostMapping("edit/{pojistnaUdalostId}")
     public String editPojisteni(
             @PathVariable long pojistnaUdalostId,
-            @Valid PojistnaUdalostDTO udalostDTO,
+            @Valid InsuranceEventDTO udalostDTO,
             BindingResult result,
             RedirectAttributes redirectAttributes, Model model
     ) {
         if (result.hasErrors())
             return renderEditForm(pojistnaUdalostId, udalostDTO, model);
         udalostDTO.setPojistnaUdalostId(pojistnaUdalostId);
-        List<Long> neplatnaPojisteni = udalostService.filtrujPojisteni(udalostDTO);
+        List<Long> neplatnaPojisteni = udalostService.filterInsurances(udalostDTO);
         if (neplatnaPojisteni.isEmpty()) {
             udalostService.edit(udalostDTO, udalostService.getById(pojistnaUdalostId).getPojistenecId());
             redirectAttributes.addFlashAttribute("success", "Změny byly provedeny.");
@@ -215,7 +213,7 @@ public class PojistnaUdalostController {
         return "redirect:/udalosti/stranka/1";
     }
 
-    @ExceptionHandler({UdalostNotFoundException.class})
+    @ExceptionHandler({EventNotFoundException.class})
     public String handleUdalostNotFoundException(
             RedirectAttributes redirectAttributes
     ) {

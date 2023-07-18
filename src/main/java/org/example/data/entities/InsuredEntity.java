@@ -2,11 +2,10 @@ package org.example.data.entities;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "seznam_pojistencu")
-public class PojistenecEntity {
+public class InsuredEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +33,7 @@ public class PojistenecEntity {
     private String psc;
 
     @OneToMany(mappedBy = "pojistenec")
-    private List<PojisteniEntity> seznamPojisteni;
+    private List<InsuranceEntity> seznamPojisteni;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -107,11 +106,11 @@ public class PojistenecEntity {
         this.psc = psc;
     }
 
-    public List<PojisteniEntity> getSeznamPojisteni() {
+    public List<InsuranceEntity> getSeznamPojisteni() {
         return seznamPojisteni;
     }
 
-    public void setSeznamPojisteni(List<PojisteniEntity> seznamPojisteni) {
+    public void setSeznamPojisteni(List<InsuranceEntity> seznamPojisteni) {
         this.seznamPojisteni = seznamPojisteni;
     }
 

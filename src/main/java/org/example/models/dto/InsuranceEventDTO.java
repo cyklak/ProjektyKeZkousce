@@ -1,18 +1,15 @@
 package org.example.models.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
-import org.example.data.entities.PojisteniEntity;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
-public class PojistnaUdalostDTO {
+public class InsuranceEventDTO {
     private long pojistnaUdalostId;
     @NotBlank(message = "Zadejte název události")
     @NotNull(message = "Zadejte název události")

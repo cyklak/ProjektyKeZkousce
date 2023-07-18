@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.util.List;
 
-public class PojisteniDTO {
+public class InsuranceDTO {
 
     private long pojisteniId;
     @NotBlank(message = "Zvolte typ pojištění")
@@ -29,9 +29,9 @@ public class PojisteniDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate platnostDo;
 
-    private PojistenecDTO pojistenec;
+    private InsuredDTO pojistenec;
 
-    private List<PojistnaUdalostDTO> seznamUdalosti;
+    private List<InsuranceEventDTO> seznamUdalosti;
 
     private boolean aktivni;
 
@@ -84,19 +84,19 @@ public class PojisteniDTO {
         this.platnostDo = platnostDo;
     }
 
-    public PojistenecDTO getPojistenec() {
+    public InsuredDTO getPojistenec() {
         return pojistenec;
     }
 
-    public void setPojistenec(PojistenecDTO pojistenec) {
+    public void setPojistenec(InsuredDTO pojistenec) {
         this.pojistenec = pojistenec;
     }
 
-    public List<PojistnaUdalostDTO> getSeznamUdalosti() {
+    public List<InsuranceEventDTO> getSeznamUdalosti() {
         return seznamUdalosti;
     }
 
-    public void setSeznamUdalosti(List<PojistnaUdalostDTO> seznamUdalosti) {
+    public void setSeznamUdalosti(List<InsuranceEventDTO> seznamUdalosti) {
         this.seznamUdalosti = seznamUdalosti;
     }
 

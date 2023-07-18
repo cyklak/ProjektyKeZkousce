@@ -10,7 +10,7 @@
     </header>
     <section>
         <form method="post" th:action="@{'/pojisteni/' + ${pojistenecId} + '/edit/' + ${pojisteniId}}"
-              th:object="${pojisteniDTO}">
+              th:object="${insuranceDTO}">
             <div class="form-row col-xl-8 col-sm">
                 <div class="form-group col">
                     <label for="typPojisteni">Pojištění</label>

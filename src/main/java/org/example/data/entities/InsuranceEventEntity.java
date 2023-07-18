@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "PojistneUdalosti")
-public class PojistnaUdalostEntity {
+public class InsuranceEventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +26,7 @@ public class PojistnaUdalostEntity {
     @JoinTable(name = "Pojisteni_a_Udalosti",
             joinColumns = @JoinColumn(name = "pojistna_udalost_id"),
             inverseJoinColumns = @JoinColumn(name = "pojisteni_id"))
-    private List<PojisteniEntity> pojisteni;
+    private List<InsuranceEntity> pojisteni;
     @Column(nullable = false)
     private Long pojistenecId;
 
@@ -73,11 +72,11 @@ public class PojistnaUdalostEntity {
         this.popisUdalosti = popisUdalosti;
     }
 
-    public List<PojisteniEntity> getPojisteni() {
+    public List<InsuranceEntity> getPojisteni() {
         return pojisteni;
     }
 
-    public void setPojisteni(List<PojisteniEntity> pojisteni) {
+    public void setPojisteni(List<InsuranceEntity> pojisteni) {
         this.pojisteni = pojisteni;
     }
 

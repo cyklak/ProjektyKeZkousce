@@ -2,14 +2,13 @@ package org.example.controllers;
 
 import jakarta.validation.Valid;
 import org.example.data.entities.UserEntity;
-import org.example.data.repositories.PojistenecRepository;
+import org.example.data.repositories.InsuredRepository;
 import org.example.data.repositories.UserRepository;
-import org.example.models.dto.PojistenecDTO;
-import org.example.models.dto.PojisteniDTO;
-import org.example.models.dto.mappers.PojistenecMapper;
-import org.example.models.dto.mappers.PojisteniMapper;
+import org.example.models.dto.InsuranceDTO;
+import org.example.models.dto.InsuredDTO;
+import org.example.models.dto.mappers.InsuredMapper;
 import org.example.models.exceptions.DuplicateEmailException;
-import org.example.models.exceptions.PojistenecNotFoundException;
+import org.example.models.exceptions.InsuredNotFoundException;
 import org.example.models.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -23,45 +22,46 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.models.dto.Role.POJISTENY;
-import static org.example.models.dto.Role.POJISTNIK;
+import static org.example.models.dto.Roles.POJISTENY;
+import static org.example.models.dto.Roles.POJISTNIK;
 
 @Controller
 @RequestMapping("/pojistenci/")
 public class InsuredController {
-    private PojistenecMapper pojistenecMapper;
-
+    @Autowired
+    private InsuredMapper insuredMapper;
+    @Autowired
     private UserRepository userRepository;
-
-    private final PojistenecServiceImpl pojistenecService = new PojistenecServiceImpl();
-
-    private PojistenecRepository pojistenecRepository;
-
-    private final PojisteniServiceImpl pojisteniService = new PojisteniServiceImpl();
+    @Autowired
+    private InsuredService insuredService;
+    @Autowired
+    private InsuredRepository insuredRepository;
+    @Autowired
+    private InsuranceService insuranceService;
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
     @GetMapping("stranka/{currentPage}")
     public String renderIndex(Model model, @PathVariable int currentPage) {
         model.addAttribute("pojistenciAktivni", 1);
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<PojistenecDTO> pojistenci = new ArrayList<>();
+        List<InsuredDTO> pojistenci = new ArrayList<>();
         if (user.isAdmin()) {
-            pojistenci = pojistenecService.getPojistenci(currentPage - 1);
+            pojistenci = insuredService.getPojistenci(currentPage - 1);
         } else if ((user.getRole().contains(POJISTNIK))) {
-            pojistenci = pojistenecService.getPojistencibyUserId(user.getUserId());
+            pojistenci = insuredService.getPojistencibyUserId(user.getUserId());
             model.addAttribute("paginace", 1);
         } else {
-            PojistenecDTO pojisteny = pojistenecService.getById(user.getPojistenec().getPojistenecId());
+            InsuredDTO pojisteny = insuredService.getById(user.getPojistenec().getPojistenecId());
             pojistenci.add(pojisteny);
         }
         model.addAttribute("pojistenci", pojistenci);
         if (user.isAdmin()) {
-            if (pojistenecRepository.count() > 10) {
+            if (insuredRepository.count() > 10) {
                 model.addAttribute("soucasnaStrana", currentPage);
             }
-            if (pojistenecRepository.count() > (currentPage * 10)) {
+            if (insuredRepository.count() > (currentPage * 10)) {
                 model.addAttribute("pristiStrana", currentPage + 1);
-                if (pojistenecRepository.count() > (currentPage * 10) + 10) {
+                if (insuredRepository.count() > (currentPage * 10) + 10) {
                     model.addAttribute("prespristiStrana", currentPage + 2);
                 }
             }
@@ -77,7 +77,7 @@ public class InsuredController {
 
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK"})
     @GetMapping("novyPojistenec")
-    public String renderNovyPojistenec(@ModelAttribute PojistenecDTO pojistenec, Model model) {
+    public String renderNovyPojistenec(@ModelAttribute InsuredDTO pojistenec, Model model) {
         model.addAttribute("pojistenciAktivni", 1);
 
         return "pages/pojistenci/novyPojistenec";
@@ -87,7 +87,7 @@ public class InsuredController {
     @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK"})
     @PostMapping("novyPojistenec")
     public String createNovyPojistenec(
-            @Valid @ModelAttribute PojistenecDTO pojistenec,
+            @Valid @ModelAttribute InsuredDTO pojistenec,
             BindingResult result,
             RedirectAttributes redirectAttributes, Model model
     ) {
@@ -101,14 +101,14 @@ public class InsuredController {
         }
         if (!pojistenec.getEmail().equals(user.getEmail())) {
             try {
-                heslo = pojistenecService.create(pojistenec);
+                heslo = insuredService.create(pojistenec);
             } catch (DuplicateEmailException e) {
                 result.rejectValue("email", "error", "Email je již používán.");
                 return renderNovyPojistenec(pojistenec, model);
             }
         }
         else {
-            heslo = pojistenecService.create(pojistenec);
+            heslo = insuredService.create(pojistenec);
         }
         redirectAttributes.addFlashAttribute("success", "Pojištěnec byl vytvořen. Heslo je: " + heslo);
 
@@ -121,11 +121,11 @@ public class InsuredController {
     public String renderDetail(@PathVariable Long pojistenecId,
                                Model model
     ) {
-        PojistenecDTO pojistenec = pojistenecService.getById(pojistenecId);
+        InsuredDTO pojistenec = insuredService.getById(pojistenecId);
         UserEntity pojistnik = userRepository.findById(pojistenec.getPojistnikId()).orElseThrow();
         model.addAttribute("pojistnik", pojistnik);
         model.addAttribute("pojistenec", pojistenec);
-        List<PojisteniDTO> pojisteni = pojisteniService.getAllByPojistenecId(pojistenecId);
+        List<InsuranceDTO> pojisteni = insuranceService.getAllByPojistenecId(pojistenecId);
         model.addAttribute("pojisteni", pojisteni);
         model.addAttribute("pojistenciAktivni", 1);
 
@@ -136,10 +136,10 @@ public class InsuredController {
     @GetMapping("edit/{pojistenecId}")
     public String renderEditForm(
             @PathVariable Long pojistenecId,
-            PojistenecDTO pojistenec, Model model
+            InsuredDTO pojistenec, Model model
     ) {
-        PojistenecDTO fetchedPojistenec = pojistenecService.getById(pojistenecId);
-        pojistenecMapper.updatePojistenecDTO(fetchedPojistenec, pojistenec);
+        InsuredDTO fetchedPojistenec = insuredService.getById(pojistenecId);
+        insuredMapper.updatePojistenecDTO(fetchedPojistenec, pojistenec);
         model.addAttribute("pojistenciAktivni", 1);
 
 
@@ -150,7 +150,7 @@ public class InsuredController {
     @PostMapping("edit/{pojistenecId}")
     public String editPojistenec(
             @PathVariable long pojistenecId,
-            @Valid PojistenecDTO pojistenec,
+            @Valid InsuredDTO pojistenec,
             BindingResult result, Model model,
             RedirectAttributes redirectAttributes
     ) {
@@ -158,7 +158,7 @@ public class InsuredController {
             return renderEditForm(pojistenecId, pojistenec, model);
 
         pojistenec.setPojistenecId(pojistenecId);
-        pojistenecService.edit(pojistenec);
+        insuredService.edit(pojistenec);
         redirectAttributes.addFlashAttribute("success", "Pojištěnec byl upraven.");
 
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -169,14 +169,14 @@ public class InsuredController {
     @GetMapping("delete/{pojistenecId}")
     public String deletePojistenec(@PathVariable long pojistenecId,
                                    RedirectAttributes redirectAttributes) {
-        pojistenecService.remove(pojistenecId);
+        insuredService.remove(pojistenecId);
         redirectAttributes.addFlashAttribute("success", "Pojištěnec byl smazán.");
 
         return "redirect:/pojistenci/stranka/1";
     }
 
 
-    @ExceptionHandler({PojistenecNotFoundException.class})
+    @ExceptionHandler({InsuredNotFoundException.class})
     public String handlePojistenecNotFoundException(
             RedirectAttributes redirectAttributes
     ) {
