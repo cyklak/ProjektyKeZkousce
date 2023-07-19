@@ -12,22 +12,22 @@
         <img th:src="@{/images/klient.png}" alt="klient" class="d-none d-md-block mr-3">
         <div class="mr-auto text-nowrap mb-3 mb-sm-none">
             <h3>Detail události</h3>
-            <p><strong>Název události: </strong><span th:text="${udalost.nazevUdalosti}"></span></p>
-            <p><strong>Datum události: </strong><span th:text="${udalost.datumUdalosti}"></span></p>
+            <p><strong>Název události: </strong><span th:text="${event.nameOfEvent}"></span></p>
+            <p><strong>Datum události: </strong><span th:text="${event.dateOfEvent}"></span></p>
             <p><strong>Aplikovaná pojištění </strong></p>
-            <div th:each="pojisteni: ${seznamPojisteni}" th:text="${pojisteni.typPojisteni}">
+            <div th:each="insurance: ${insuranceList}" th:text="${insurance.insuranceType}">
             </div>
         </div>
         <div class="text-wrap ml-sm-5">
             <h3 class="invisible d-none d-sm-block">j</h3>
-            <p><strong>Popis události: </strong><span th:text="${udalost.popisUdalosti}"></span></p>
+            <p><strong>Popis události: </strong><span th:text="${event.eventDescription}"></span></p>
         </div>
     </div>
 
     <footer class="d-flex flex-column flex-sm-row justify-content-center mt-3">
-        <a th:href="@{'/udalosti/edit/' + ${udalost.pojistnaUdalostId}}"
+        <a th:href="@{'/udalosti/edit/' + ${event.insuranceEventId}}"
            class="btn btn-warning mx-0 mx-sm-1 my-1 my-sm-0">Editovat událost</a>
-        <a th:href="@{'/udalosti/delete/' + ${udalost.pojistnaUdalostId}}"
+        <a th:href="@{'/udalosti/delete/' + ${event.insuranceEventId}}"
            class="btn btn-danger mx-0 mx-sm-1 my-1 my-sm-0">Odstranit událost</a>
         <a th:href="@{'/udalosti/stranka/1'}" class="btn btn-secondary mx-0 mx-sm-1 my-1 my-sm-0">Zpět</a>
     </footer>

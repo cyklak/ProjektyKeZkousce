@@ -3,7 +3,7 @@ package org.example.models.services;
 import org.example.data.entities.UserEntity;
 import org.example.data.repositories.UserRepository;
 import org.example.models.dto.InsuredDTO;
-import org.example.models.dto.Roles;
+import org.example.models.dto.Role;
 import org.example.models.dto.UserDTO;
 import org.example.models.exceptions.DuplicateEmailException;
 import org.example.models.exceptions.PasswordsDoNotEqualException;
@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.example.models.dto.Roles.POJISTENY;
-import static org.example.models.dto.Roles.POJISTNIK;
+import static org.example.models.dto.Role.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -45,8 +44,8 @@ public class UserService implements UserDetailsService {
 
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
-        List<Roles> roles = new ArrayList<>();
-        roles.add(POJISTNIK);
+        List<Role> roles = new ArrayList<>();
+        roles.add(POLICYHOLER);
         userEntity.setRole(roles);
         userEntity.setAdmin(false);
 
@@ -69,14 +68,14 @@ public class UserService implements UserDetailsService {
        return heslo;
     }
 
-    public UserEntity createPojistenec(InsuredDTO pojistenec, String password) {
+    public UserEntity createInsured(InsuredDTO insured, String password) {
 
         UserEntity userEntity = new UserEntity();
 
-        userEntity.setEmail(pojistenec.getEmail());
+        userEntity.setEmail(insured.getEmail());
         userEntity.setPassword(passwordEncoder.encode(password));
-        List<Roles> roles = new ArrayList<>();
-        roles.add(POJISTENY);
+        List<Role> roles = new ArrayList<>();
+        roles.add(INSURED);
         userEntity.setRole(roles);
         userEntity.setAdmin(false);
 
@@ -88,7 +87,7 @@ public class UserService implements UserDetailsService {
         return userEntity;
     }
 
-    public String getPojistnikEmail(Long id) {
+    public String getPolicyholderEmail(Long id) {
        return userRepository.findById(id).orElseThrow().getEmail();
     }
 

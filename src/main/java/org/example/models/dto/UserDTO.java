@@ -22,7 +22,7 @@ public class UserDTO {
     @NotNull(message = "Vyplňte uživatelské heslo")
     @Size(min = 6, message = "Heslo musí mít alespoň 6 znaků")
     private String confirmPassword;
-    private Roles roles;
+    private Role role;
 
 
     //region: getters and setters
@@ -60,12 +60,12 @@ public class UserDTO {
 
 
 
-    public Roles getRole() {
-        return roles;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRole(Roles roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
     //endregion
 }

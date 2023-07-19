@@ -12,5 +12,5 @@ public interface InsuranceRepository extends CrudRepository<InsuranceEntity, Lon
 
     Page<InsuranceEntity> findAll(Pageable page);
 
-    List<InsuranceEntity> findAllBypojistenec (InsuredEntity pojistenec);
+    List<InsuranceEntity> findAllByinsured (InsuredEntity insured);
 }

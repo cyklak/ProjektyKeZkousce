@@ -8,14 +8,14 @@ import java.util.List;
 
 public class InsuredDTO {
 
-    private long pojistenecId;
+    private long insuredId;
     @NotBlank(message = "Vyplňte jméno")
     @NotNull(message = "Vyplňte jméno")
-    private String jmeno;
+    private String firstName;
 
     @NotBlank(message = "Vyplňte příjmení")
     @NotNull(message = "Vyplňte příjmení")
-    private String prijmeni;
+    private String lastName;
 
     @NotBlank(message = "Vyplňte email")
     @NotNull(message = "Vyplňte email")
@@ -24,43 +24,52 @@ public class InsuredDTO {
 
     @NotBlank(message = "Vyplňte telefon")
     @NotNull(message = "Vyplňte telefon")
-    private String telefon;
+    private String phoneNumber;
 
     @NotBlank(message = "Vyplňte ulici a číslo popisné")
     @NotNull(message = "Vyplňte ulici a číslo popisné")
-    private String ulice;
+    private String street;
 
     @NotBlank(message = "Vyplňte město")
     @NotNull(message = "Vyplňte město")
-    private String mesto;
+    private String city;
 
     @NotBlank(message = "Vyplňte psč")
     @NotNull(message = "Vyplňte psč")
-    private String psc;
+    private String zip;
 
     private long userId;
 
-    private List<Long> pojisteniIds;
+    private List<Long> insuranceIds;
 
-    private long pojistnikId;
+    private long policyholderId;
 
 
     //region: Getters and setters
 
-    public String getJmeno() {
-        return jmeno;
+
+    public long getInsuredId() {
+        return insuredId;
     }
 
-    public void setJmeno(String jmeno) {
-        this.jmeno = jmeno;
+    public void setInsuredId(long insuredId) {
+        this.insuredId = insuredId;
     }
 
-    public String getPrijmeni() {
-        return prijmeni;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setPrijmeni(String prijmeni) {
-        this.prijmeni = prijmeni;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -71,44 +80,36 @@ public class InsuredDTO {
         this.email = email;
     }
 
-    public String getTelefon() {
-        return telefon;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getUlice() {
-        return ulice;
+    public String getStreet() {
+        return street;
     }
 
-    public void setUlice(String ulice) {
-        this.ulice = ulice;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public String getMesto() {
-        return mesto;
+    public String getCity() {
+        return city;
     }
 
-    public void setMesto(String mesto) {
-        this.mesto = mesto;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getPsc() {
-        return psc;
+    public String getZip() {
+        return zip;
     }
 
-    public void setPsc(String psc) {
-        this.psc = psc;
-    }
-
-    public long getPojistenecId() {
-        return pojistenecId;
-    }
-
-    public void setPojistenecId(long pojistenecId) {
-        this.pojistenecId = pojistenecId;
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
     public long getUserId() {
@@ -119,19 +120,19 @@ public class InsuredDTO {
         this.userId = userId;
     }
 
-    public List<Long> getPojisteniIds() {
-        return pojisteniIds;
+    public List<Long> getInsuranceIds() {
+        return insuranceIds;
     }
 
-    public void setPojisteniIds(List<Long> pojisteniIds) {
-        this.pojisteniIds = pojisteniIds;
+    public void setInsuranceIds(List<Long> insuranceIds) {
+        this.insuranceIds = insuranceIds;
     }
 
-    public long getPojistnikId() {
-        return pojistnikId;
+    public long getPolicyholderId() {
+        return policyholderId;
     }
 
-    public void setPojistnikId(long pojistnikId) {
-        this.pojistnikId = pojistnikId;
+    public void setPolicyholderId(long policyholderId) {
+        this.policyholderId = policyholderId;
     }
 }

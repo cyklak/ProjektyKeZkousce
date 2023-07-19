@@ -10,101 +10,100 @@ import java.util.List;
 
 public class InsuranceDTO {
 
-    private long pojisteniId;
+    private long insuranceId;
     @NotBlank(message = "Zvolte typ pojištění")
     @NotNull(message = "Zvolte typ pojištění")
-    private String typPojisteni;
+    private String insuranceType;
     @NotBlank(message = "Vyplňte částku")
     @NotNull(message = "Vyplňte částku")
-    private String castka;
+    private String amount;
     @NotBlank(message = "Vyplňte předmět pojištění")
     @NotNull(message = "Vyplňte předmět pojištění")
-    private String predmetPojisteni;
+    private String insuredObject;
     @Future(message = "Nejbližší možné datum je zítřek")
     @NotNull(message = "Zvolte platnost od")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate platnostOd;
+    private LocalDate validFrom;
     @Future(message = "Nejbližší možné datum je zítřek")
     @NotNull(message = "Zvolte platnost do")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate platnostDo;
+    private LocalDate validUntil;
 
-    private InsuredDTO pojistenec;
+    private InsuredDTO insured;
 
-    private List<InsuranceEventDTO> seznamUdalosti;
+    private List<InsuranceEventDTO> eventList;
 
-    private boolean aktivni;
+    private boolean active;
 
-
-    public long getPojisteniId() {
-        return pojisteniId;
+    public long getInsuranceId() {
+        return insuranceId;
     }
 
-    public void setPojisteniId(long pojisteniId) {
-        this.pojisteniId = pojisteniId;
+    public void setInsuranceId(long insuranceId) {
+        this.insuranceId = insuranceId;
     }
 
-    public String getTypPojisteni() {
-        return typPojisteni;
+    public String getInsuranceType() {
+        return insuranceType;
     }
 
-    public void setTypPojisteni(String typPojisteni) {
-        this.typPojisteni = typPojisteni;
+    public void setInsuranceType(String insuranceType) {
+        this.insuranceType = insuranceType;
     }
 
-    public String getCastka() {
-        return castka;
+    public String getAmount() {
+        return amount;
     }
 
-    public void setCastka(String castka) {
-        this.castka = castka;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
-    public String getPredmetPojisteni() {
-        return predmetPojisteni;
+    public String getInsuredObject() {
+        return insuredObject;
     }
 
-    public void setPredmetPojisteni(String predmetPojisteni) {
-        this.predmetPojisteni = predmetPojisteni;
+    public void setInsuredObject(String insuredObject) {
+        this.insuredObject = insuredObject;
     }
 
-    public LocalDate getPlatnostOd() {
-        return platnostOd;
+    public LocalDate getValidFrom() {
+        return validFrom;
     }
 
-    public void setPlatnostOd(LocalDate platnostOd) {
-        this.platnostOd = platnostOd;
+    public void setValidFrom(LocalDate validFrom) {
+        this.validFrom = validFrom;
     }
 
-    public LocalDate getPlatnostDo() {
-        return platnostDo;
+    public LocalDate getValidUntil() {
+        return validUntil;
     }
 
-    public void setPlatnostDo(LocalDate platnostDo) {
-        this.platnostDo = platnostDo;
+    public void setValidUntil(LocalDate validUntil) {
+        this.validUntil = validUntil;
     }
 
-    public InsuredDTO getPojistenec() {
-        return pojistenec;
+    public InsuredDTO getInsured() {
+        return insured;
     }
 
-    public void setPojistenec(InsuredDTO pojistenec) {
-        this.pojistenec = pojistenec;
+    public void setInsured(InsuredDTO insured) {
+        this.insured = insured;
     }
 
-    public List<InsuranceEventDTO> getSeznamUdalosti() {
-        return seznamUdalosti;
+    public List<InsuranceEventDTO> getEventList() {
+        return eventList;
     }
 
-    public void setSeznamUdalosti(List<InsuranceEventDTO> seznamUdalosti) {
-        this.seznamUdalosti = seznamUdalosti;
+    public void setEventList(List<InsuranceEventDTO> eventList) {
+        this.eventList = eventList;
     }
 
-    public boolean isAktivni() {
-        return aktivni;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setAktivni(boolean aktivni) {
-        this.aktivni = aktivni;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

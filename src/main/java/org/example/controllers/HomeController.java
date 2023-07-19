@@ -16,13 +16,13 @@ public class HomeController {
         return "pages/home/index";
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
+    @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping("home")
     public String renderIndex2() {
         return "pages/home/index";
     }
 
-    @Secured({"ROLE_ADMIN", "ROLE_POJISTNIK", "ROLE_POJISTENY"})
+    @Secured({"ROLE_ADMIN",  "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping({"home/credits"})
     public String renderCredits(Model model) {
         model.addAttribute("credits", 1);

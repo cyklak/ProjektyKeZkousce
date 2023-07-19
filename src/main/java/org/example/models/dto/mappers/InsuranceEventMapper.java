@@ -15,17 +15,17 @@ public interface InsuranceEventMapper {
 
     InsuranceEventEntity toEntity(InsuranceEventDTO source);
 
-    @Mapping(target = "pojisteniIds", expression = "java(getPojistnaUdalostIds(source))")
+    @Mapping(target = "insuranceIds", expression = "java(getInsuranceIds(source))")
     InsuranceEventDTO toDTO(InsuranceEventEntity source);
 
-    void updatePojistnaUdalostDTO(InsuranceEventDTO source, @MappingTarget InsuranceEventDTO target);
+    void updateInsuranceEventDTO(InsuranceEventDTO source, @MappingTarget InsuranceEventDTO target);
 
-    void updatePojistnaUdalostEntity(InsuranceEventDTO source, @MappingTarget InsuranceEventEntity target);
+    void updateInsuranceEventEntity(InsuranceEventDTO source, @MappingTarget InsuranceEventEntity target);
 
-    default List<Long> getPojistnaUdalostIds(InsuranceEventEntity source) {
+    default List<Long> getInsuranceIds(InsuranceEventEntity source) {
         List<Long> result = new ArrayList<>();
-        for (InsuranceEntity pojisteni : source.getPojisteni()) {
-            result.add(pojisteni.getPojisteniId());
+        for (InsuranceEntity insurance : source.getInsurances()) {
+            result.add(insurance.getInsuranceId());
         }
         return result;
     }

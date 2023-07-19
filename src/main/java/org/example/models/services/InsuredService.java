@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import static org.example.models.dto.Roles.POJISTENY;
+import static org.example.models.dto.Role.INSURED;
 
 @Service
 public class InsuredService {
@@ -48,25 +48,24 @@ public class InsuredService {
     }
 
 
-    public String create(InsuredDTO pojistenec) {
+    public String create(InsuredDTO insured) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        InsuredEntity newPojistenec = insuredMapper.toEntity(pojistenec);
-        newPojistenec.setPojistnikId(user.getUserId());
-        if (pojistenec.getEmail().equals(user.getEmail())) {
-            newPojistenec.setUserEntity(user);
-            user.getRole().add(POJISTENY);
-            insuredRepository.save(newPojistenec);
+        InsuredEntity newInsured = insuredMapper.toEntity(insured);
+        newInsured.setPolicyholderId(user.getUserId());
+        if (insured.getEmail().equals(user.getEmail())) {
+            newInsured.setUser(user);
+            user.getRole().add(INSURED);
+            insuredRepository.save(newInsured);
             userRepository.save(user);
         } else {
             String password = userService.generatePassword();
-            UserEntity pojisteny = userService.createPojistenec(pojistenec, password);
-            newPojistenec.setUserEntity(pojisteny);
-            insuredRepository.save(newPojistenec);
+            UserEntity insuredEntity = userService.createInsured(insured, password);
+            newInsured.setUser(insuredEntity);
+            insuredRepository.save(newInsured);
             return password;
         }
         return "vaše současné heslo";
     }
-
 
 
     public List<InsuredDTO> getAll() {
@@ -76,11 +75,11 @@ public class InsuredService {
     }
 
     public Long getInsuredCount() {
-       return insuredRepository.count();
+        return insuredRepository.count();
     }
 
 
-    public List<InsuredDTO> getPojistenci(int currentPage) {
+    public List<InsuredDTO> getInsuredList(int currentPage) {
         Page<InsuredEntity> pageOfPeople = insuredRepository.findAll(PageRequest.of(currentPage, 10));
         List<InsuredEntity> personEntities = pageOfPeople.getContent();
         List<InsuredDTO> result = new ArrayList<>();
@@ -91,58 +90,60 @@ public class InsuredService {
     }
 
 
-    public InsuredDTO getById(long pojistenecId) {
-        InsuredEntity fetchedPojistenec = getPojistenecOrThrow(pojistenecId);
+    public InsuredDTO getById(long insuredId) {
+        InsuredEntity fetchedPojistenec = getInsuredOrThrow(insuredId);
 
         return insuredMapper.toDTO(fetchedPojistenec);
     }
 
-    public List<InsuredDTO> getPojistencibyUserId(long userId) {
+    public List<InsuredDTO> getInsuredListByUserId(long userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow();
-        List<InsuredEntity> seznamPojistencu = insuredRepository.findAllByPojistnikId(userId);
+        List<InsuredEntity> insuredList = insuredRepository.findAllBypolicyholderId(userId);
         List<InsuredDTO> result = new ArrayList<>();
-        for (InsuredEntity e : seznamPojistencu) {
+        for (InsuredEntity e : insuredList) {
             result.add(insuredMapper.toDTO(e));
         }
         return result;
     }
 
 
-    public void edit(InsuredDTO pojistenec) {
-        InsuredEntity fetchedPojistenec = getPojistenecOrThrow(pojistenec.getPojistenecId());
-        List<InsuranceEventEntity> udalosti = udalostRepository.findAllBypojistenecId(pojistenec.getPojistenecId());
-        for (InsuranceEventEntity udalost : udalosti) {
-            udalost.setJmenoPojisteneho(pojistenec.getJmeno());
-            udalost.setPrijmeniPojisteneho(pojistenec.getPrijmeni());
-            udalostRepository.save(udalost);
+    public void edit(InsuredDTO insured) {
+        InsuredEntity fetchedInsured = getInsuredOrThrow(insured.getInsuredId());
+        Long policyholderId = fetchedInsured.getPolicyholderId();
+        List<InsuranceEventEntity> events = udalostRepository.findAllByinsuredId(insured.getInsuredId());
+        for (InsuranceEventEntity event : events) {
+            event.setInsuredFirstName(insured.getFirstName());
+            event.setInsuredLastName(insured.getLastName());
+            udalostRepository.save(event);
         }
 
-        insuredMapper.updatePojistenecEntity(pojistenec, fetchedPojistenec);
-        insuredRepository.save(fetchedPojistenec);
+        insuredMapper.updateInsuredEntity(insured, fetchedInsured);
+        fetchedInsured.setPolicyholderId(policyholderId);
+        insuredRepository.save(fetchedInsured);
     }
 
-    private InsuredEntity getPojistenecOrThrow(long pojistenecID) {
+    private InsuredEntity getInsuredOrThrow(long insuredID) {
         return insuredRepository
-                .findById(pojistenecID)
+                .findById(insuredID)
                 .orElseThrow(InsuredNotFoundException::new);
     }
 
 
-    public void remove(long pojistenecId) {
+    public void remove(long insuredId) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserEntity entity = insuredRepository.findById(pojistenecId).orElseThrow().getUserEntity();
-        InsuredEntity fetchedEntity = getPojistenecOrThrow(pojistenecId);
-        List<InsuranceEventEntity> udalosti = udalostRepository.findAllBypojistenecId(pojistenecId);
-        for (InsuranceEventEntity udalost: udalosti) {
-            udalostRepository.delete(udalost);
+        UserEntity entity = insuredRepository.findById(insuredId).orElseThrow().getUser();
+        InsuredEntity fetchedEntity = getInsuredOrThrow(insuredId);
+        List<InsuranceEventEntity> events = udalostRepository.findAllByinsuredId(insuredId);
+        for (InsuranceEventEntity event : events) {
+            udalostRepository.delete(event);
         }
-        List<InsuranceEntity> seznamPojisteni = insuranceRepository.findAllBypojistenec(fetchedEntity);
-        for (InsuranceEntity pojisteni: seznamPojisteni) {
-            insuranceRepository.delete(pojisteni);
+        List<InsuranceEntity> insuranceList = insuranceRepository.findAllByinsured(fetchedEntity);
+        for (InsuranceEntity insurance : insuranceList) {
+            insuranceRepository.delete(insurance);
         }
         insuredRepository.delete(fetchedEntity);
         if (user.getUserId() == entity.getUserId()) {
-            user.getRole().remove(POJISTENY);
+            user.getRole().remove(INSURED);
             userRepository.save(user);
         }
         if (user.getUserId() != entity.getUserId()) {

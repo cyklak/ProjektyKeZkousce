@@ -6,97 +6,95 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "seznam_pojisteni")
+@Table(name = "insurance_list")
 public class InsuranceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long pojisteniId;
+    private long insuranceId;
 
     @Column(nullable = false)
-    private String typPojisteni;
+    private String insuranceType;
 
     @Column(nullable = false)
-    private String castka;
+    private String amount;
 
     @Column(nullable = false)
-    private String predmetPojisteni;
+    private String insuredObject;
 
     @Column(nullable = false)
-    private LocalDate platnostOd;
+    private LocalDate validFrom;
 
     @Column(nullable = false)
-    private LocalDate platnostDo;
+    private LocalDate validUntil;
 
     @ManyToOne
-    @JoinColumn(name = "pojistenecId")
-    private InsuredEntity pojistenec;
+    @JoinColumn(name = "insuredId")
+    private InsuredEntity insured;
 
-    @ManyToMany (mappedBy = "pojisteni")
-    private List<InsuranceEventEntity> seznamUdalosti;
+    @ManyToMany (mappedBy = "insurances")
+    private List<InsuranceEventEntity> eventList;
 
-    public long getPojisteniId() {
-        return pojisteniId;
+    public long getInsuranceId() {
+        return insuranceId;
     }
 
-    public String getTypPojisteni() {
-        return typPojisteni;
+    public void setInsuranceId(long insuranceId) {
+        this.insuranceId = insuranceId;
     }
 
-    public void setTypPojisteni(String typPojisteni) {
-        this.typPojisteni = typPojisteni;
+    public String getInsuranceType() {
+        return insuranceType;
     }
 
-    public void setPojisteniId(long pojisteniId) {
-        this.pojisteniId = pojisteniId;
+    public void setInsuranceType(String insuranceType) {
+        this.insuranceType = insuranceType;
     }
 
-    public String getCastka() {
-        return castka;
+    public String getAmount() {
+        return amount;
     }
 
-    public void setCastka(String castka) {
-        this.castka = castka;
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 
-    public String getPredmetPojisteni() {
-        return predmetPojisteni;
+    public String getInsuredObject() {
+        return insuredObject;
     }
 
-    public void setPredmetPojisteni(String predmetPojisteni) {
-        this.predmetPojisteni = predmetPojisteni;
+    public void setInsuredObject(String insuredObject) {
+        this.insuredObject = insuredObject;
     }
 
-    public LocalDate getPlatnostOd() {
-        return platnostOd;
+    public LocalDate getValidFrom() {
+        return validFrom;
     }
 
-    public void setPlatnostOd(LocalDate platnostOd) {
-        this.platnostOd = platnostOd;
+    public void setValidFrom(LocalDate validFrom) {
+        this.validFrom = validFrom;
     }
 
-    public LocalDate getPlatnostDo() {
-        return platnostDo;
+    public LocalDate getValidUntil() {
+        return validUntil;
     }
 
-    public void setPlatnostDo(LocalDate platnostDo) {
-        this.platnostDo = platnostDo;
+    public void setValidUntil(LocalDate validUntil) {
+        this.validUntil = validUntil;
     }
 
-    public InsuredEntity getPojistenec() {
-        return pojistenec;
+    public InsuredEntity getInsured() {
+        return insured;
     }
 
-    public void setPojistenec(InsuredEntity pojistenec) {
-        this.pojistenec = pojistenec;
+    public void setInsured(InsuredEntity insured) {
+        this.insured = insured;
     }
 
-    public List<InsuranceEventEntity> getSeznamUdalosti() {
-        return seznamUdalosti;
+    public List<InsuranceEventEntity> getEventList() {
+        return eventList;
     }
 
-    public void setSeznamUdalosti(List<InsuranceEventEntity> seznamUdalosti) {
-        this.seznamUdalosti = seznamUdalosti;
+    public void setEventList(List<InsuranceEventEntity> eventList) {
+        this.eventList = eventList;
     }
-
-
 }

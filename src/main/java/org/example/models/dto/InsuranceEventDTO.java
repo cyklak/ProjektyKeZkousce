@@ -10,107 +10,107 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class InsuranceEventDTO {
-    private long pojistnaUdalostId;
+    private long insuranceEventId;
     @NotBlank(message = "Zadejte název události")
     @NotNull(message = "Zadejte název události")
-    private String nazevUdalosti;
+    private String nameOfEvent;
     @PastOrPresent(message = "Nelze zvolit budoucí datum")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "Zadejte datum události")
-    private LocalDate datumUdalosti;
+    private LocalDate dateOfEvent;
     @NotBlank(message = "Zadejte popis události")
     @NotNull(message = "Zadejte popis události")
-    private String popisUdalosti;
+    private String eventDescription;
     @Size(min = 1, message = "Zvolte alespoň 1 aplikovatelné pojištění")
-    private List<Long> pojisteniIds;
+    private List<Long> insuranceIds;
 
-    private Long pojistenecId;
+    private Long insuredId;
 
-    private Long pojistnikId;
+    private Long policyholderId;
 
-    private String jmenoPojisteneho;
+    private String insuredFirstName;
 
-    private String prijmeniPojisteneho;
+    private String insuredLastName;
 
-    private List<Long> neplatnaPojisteni;
+    private List<Long> invalidInsurances;
 
-    public long getPojistnaUdalostId() {
-        return pojistnaUdalostId;
+    public long getInsuranceEventId() {
+        return insuranceEventId;
     }
 
-    public void setPojistnaUdalostId(long pojistnaUdalostId) {
-        this.pojistnaUdalostId = pojistnaUdalostId;
+    public void setInsuranceEventId(long insuranceEventId) {
+        this.insuranceEventId = insuranceEventId;
     }
 
-    public String getNazevUdalosti() {
-        return nazevUdalosti;
+    public String getNameOfEvent() {
+        return nameOfEvent;
     }
 
-    public void setNazevUdalosti(String nazevUdalosti) {
-        this.nazevUdalosti = nazevUdalosti;
+    public void setNameOfEvent(String nameOfEvent) {
+        this.nameOfEvent = nameOfEvent;
     }
 
-    public LocalDate getDatumUdalosti() {
-        return datumUdalosti;
+    public LocalDate getDateOfEvent() {
+        return dateOfEvent;
     }
 
-    public void setDatumUdalosti(LocalDate datumUdalosti) {
-        this.datumUdalosti = datumUdalosti;
+    public void setDateOfEvent(LocalDate dateOfEvent) {
+        this.dateOfEvent = dateOfEvent;
     }
 
-    public String getPopisUdalosti() {
-        return popisUdalosti;
+    public String getEventDescription() {
+        return eventDescription;
     }
 
-    public void setPopisUdalosti(String popisUdalosti) {
-        this.popisUdalosti = popisUdalosti;
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
     }
 
-    public List<Long> getPojisteniIds() {
-        return pojisteniIds;
+    public List<Long> getInsuranceIds() {
+        return insuranceIds;
     }
 
-    public void setPojisteniIds(List<Long> pojisteniIds) {
-        this.pojisteniIds = pojisteniIds;
+    public void setInsuranceIds(List<Long> insuranceIds) {
+        this.insuranceIds = insuranceIds;
     }
 
-    public Long getPojistenecId() {
-        return pojistenecId;
+    public Long getInsuredId() {
+        return insuredId;
     }
 
-    public void setPojistenecId(Long pojistenecId) {
-        this.pojistenecId = pojistenecId;
+    public void setInsuredId(Long insuredId) {
+        this.insuredId = insuredId;
     }
 
-    public Long getPojistnikId() {
-        return pojistnikId;
+    public Long getPolicyholderId() {
+        return policyholderId;
     }
 
-    public void setPojistnikId(Long pojistnikId) {
-        this.pojistnikId = pojistnikId;
+    public void setPolicyholderId(Long policyholderId) {
+        this.policyholderId = policyholderId;
     }
 
-    public String getJmenoPojisteneho() {
-        return jmenoPojisteneho;
+    public String getInsuredFirstName() {
+        return insuredFirstName;
     }
 
-    public void setJmenoPojisteneho(String jmenoPojisteneho) {
-        this.jmenoPojisteneho = jmenoPojisteneho;
+    public void setInsuredFirstName(String insuredFirstName) {
+        this.insuredFirstName = insuredFirstName;
     }
 
-    public String getPrijmeniPojisteneho() {
-        return prijmeniPojisteneho;
+    public String getInsuredLastName() {
+        return insuredLastName;
     }
 
-    public void setPrijmeniPojisteneho(String prijmeniPojisteneho) {
-        this.prijmeniPojisteneho = prijmeniPojisteneho;
+    public void setInsuredLastName(String insuredLastName) {
+        this.insuredLastName = insuredLastName;
     }
 
-    public List<Long> getNeplatnaPojisteni() {
-        return neplatnaPojisteni;
+    public List<Long> getInvalidInsurances() {
+        return invalidInsurances;
     }
 
-    public void setNeplatnaPojisteni(List<Long> neplatnaPojisteni) {
-        this.neplatnaPojisteni = neplatnaPojisteni;
+    public void setInvalidInsurances(List<Long> invalidInsurances) {
+        this.invalidInsurances = invalidInsurances;
     }
 }

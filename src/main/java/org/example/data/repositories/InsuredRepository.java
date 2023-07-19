@@ -10,6 +10,6 @@ public interface InsuredRepository extends CrudRepository<InsuredEntity, Long> {
 
     Page<InsuredEntity> findAll(Pageable page);
 
-    List<InsuredEntity> findAllByPojistnikId(long pojistnikId);
+    List<InsuredEntity> findAllBypolicyholderId(long policyholderId);
 
 }

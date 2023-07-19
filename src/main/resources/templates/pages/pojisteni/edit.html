@@ -6,51 +6,51 @@
 
 <article>
     <header>
-        <h3 th:text="'Upravit pojištění k ' + ${pojistenec.jmeno} + ' ' + ${pojistenec.prijmeni}" class="py-4"></h3>
+        <h3 th:text="'Upravit pojištění k ' + ${insured.firstName} + ' ' + ${insured.lastName}" class="py-4"></h3>
     </header>
     <section>
-        <form method="post" th:action="@{'/pojisteni/' + ${pojistenecId} + '/edit/' + ${pojisteniId}}"
+        <form method="post" th:action="@{'/pojisteni/' + ${insuredId} + '/edit/' + ${insuranceId}}"
               th:object="${insuranceDTO}">
             <div class="form-row col-xl-8 col-sm">
                 <div class="form-group col">
-                    <label for="typPojisteni">Pojištění</label>
-                    <select th:field="*{typPojisteni}" id="typPojisteni" class="form-control">
+                    <label for="insuranceType">Pojištění</label>
+                    <select th:field="*{insuranceType}" id="insuranceType" class="form-control">
                         <option value="Pojištění majetku">Pojištění majetku</option>
                         <option value="Zdravotní pojištění">Zdravotní pojištění</option>
                         <option value="Povinné ručení">Povinné ručení</option>
                     </select>
-                    <small class="text-danger" th:errors="*{typPojisteni}"></small>
+                    <small class="text-danger" th:errors="*{insuranceType}"></small>
                 </div>
             </div>
             <div class="form-row col-xl-8 col-sm">
                 <div class="form-group col-md-6 col-sm">
-                    <label for="castka">Částka</label>
-                    <input th:field="*{castka}" type="text" class="form-control" id="castka">
-                    <small class="text-danger" th:errors="*{castka}"></small>
+                    <label for="amount">Částka</label>
+                    <input th:field="*{amount}" type="text" class="form-control" id="amount">
+                    <small class="text-danger" th:errors="*{amount}"></small>
                 </div>
                 <div class="w-100 d-md-none"></div>
                 <div class="form-group col-md-6 col-sm">
-                    <label for="predmetPojisteni">Předmět pojištění</label>
-                    <input th:field="*{predmetPojisteni}" type="text" class="form-control" id="predmetPojisteni">
-                    <small class="text-danger" th:errors="*{predmetPojisteni}"></small>
+                    <label for="insuredObject">Předmět pojištění</label>
+                    <input th:field="*{insuredObject}" type="text" class="form-control" id="insuredObject">
+                    <small class="text-danger" th:errors="*{insuredObject}"></small>
                 </div>
             </div>
             <div class="form-row col-xl-8 col-sm">
                 <div class="form-group col-md-6 col-sm">
-                    <label for="platnostOd">Platnost od</label>
-                    <input th:field="*{platnostOd}" type="date" class="form-control" id="platnostOd" placeholder="">
-                    <small class="text-danger" th:errors="*{platnostOd}"></small>
+                    <label for="validFrom">Platnost od</label>
+                    <input th:field="*{validFrom}" type="date" class="form-control" id="validFrom" placeholder="">
+                    <small class="text-danger" th:errors="*{validFrom}"></small>
                 </div>
                 <div class="w-100 d-md-none"></div>
                 <div class="form-group col-md-6 col-sm">
-                    <label for="platnostDo">Platnost do</label>
-                    <input th:field="*{platnostDo}" type="date" class="form-control" id="platnostDo">
-                    <small class="text-danger" th:errors="*{platnostDo}"></small>
+                    <label for="validUntil">Platnost do</label>
+                    <input th:field="*{validUntil}" type="date" class="form-control" id="validUntil">
+                    <small class="text-danger" th:errors="*{validUntil}"></small>
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center mt-3 mb-sm-3">
                 <button class="btn btn-primary" type="submit">Uložit</button>
-                <a class="btn btn-secondary ml-1" type="button" th:href="@{'/pojistenci/' + ${pojistenecId}}">Detail pojištěnce</a>
+                <a class="btn btn-secondary ml-1" type="button" th:href="@{'/pojistenci/' + ${insuredId}}">Detail pojištěnce</a>
             </div>
         </form>
     </section>

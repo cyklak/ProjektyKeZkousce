@@ -1,7 +1,7 @@
 package org.example.data.entities;
 
 import jakarta.persistence.*;
-import org.example.models.dto.Roles;
+import org.example.models.dto.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.example.models.dto.Roles.*;
+import static org.example.models.dto.Role.*;
 
 
 @Entity
@@ -27,13 +27,13 @@ public class UserEntity implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private List<Roles> roles;
+    private List<Role> roles;
 
     @Column(nullable = false)
     private boolean admin;
 
     @OneToOne (mappedBy = "user")
-    private InsuredEntity pojistenec;
+    private InsuredEntity insured;
 
     // region: UserDetails Methods
     @Override
@@ -52,10 +52,10 @@ public class UserEntity implements UserDetails {
         if (admin) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));}
         else {
-        if (roles.contains(POJISTNIK))
-            authorities.add(new SimpleGrantedAuthority("ROLE_POJISTNIK"));
-        if (roles.contains(POJISTENY))
-            authorities.add(new SimpleGrantedAuthority("ROLE_POJISTENY"));}
+        if (roles.contains(POLICYHOLER))
+            authorities.add(new SimpleGrantedAuthority("ROLE_POLICYHOLDER"));
+        if (roles.contains(INSURED))
+            authorities.add(new SimpleGrantedAuthority("ROLE_INSURED"));}
 
         return authorities;
     }
@@ -105,19 +105,19 @@ public class UserEntity implements UserDetails {
         this.password = password;
     }
 
-    public InsuredEntity getPojistenec() {
-        return pojistenec;
+    public InsuredEntity getInsured() {
+        return insured;
     }
 
-    public void setPojistenec(InsuredEntity pojistenec) {
-        this.pojistenec = pojistenec;
+    public void setInsured(InsuredEntity insured) {
+        this.insured = insured;
     }
 
-    public List<Roles> getRole() {
+    public List<Role> getRole() {
         return roles;
     }
 
-    public void setRole(List<Roles> roles) {
+    public void setRole(List<Role> roles) {
         this.roles = roles;
     }
 

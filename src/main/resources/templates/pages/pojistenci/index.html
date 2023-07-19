@@ -12,57 +12,57 @@
         <h3 class="py-4">Pojištěnci</h3>
     </header>
     <section class="d-flex flex-column align-items-center col-xl-8 col-sm">
-        <a class="btn btn-primary" sec:authorize="hasRole('POJISTNIK')" th:href="@{/pojistenci/novyPojistenec}">Nový pojištěnec</a>
+        <a class="btn btn-primary" sec:authorize="hasRole('POLICYHOLDER')" th:href="@{/pojistenci/novyPojistenec}">Nový pojištěnec</a>
         <table class="table mt-3" style="border: 2px solid black">
             <thead>
             <th class="col-3" style="border: 2px solid black">Jméno</th>
             <th class="col-6" style="border: 2px solid black">Bydliště</th>
             <th class="col-3" style="border: 2px solid black"></th>
             </thead>
-            <tbody id="tabulka">
-            <tr th:each="pojistenec: ${pojistenci}" style="border: 2px solid black">
-                <td style="border: 2px solid black"><a th:href="@{'/pojistenci/' + ${pojistenec.pojistenecId}}"
-                                                       th:text="${pojistenec.jmeno} + ' ' + ${pojistenec.prijmeni}"></a>
+            <tbody id="table">
+            <tr th:each="insured: ${insuredList}" style="border: 2px solid black">
+                <td style="border: 2px solid black"><a th:href="@{'/pojistenci/' + ${insured.insuredId}}"
+                                                       th:text="${insured.firstName} + ' ' + ${insured.lastName}"></a>
                 </td>
-                <td style="border: 2px solid black" th:text="${pojistenec.ulice} + ', ' + ${pojistenec.mesto}"></td>
+                <td style="border: 2px solid black" th:text="${insured.street} + ', ' + ${insured.city}"></td>
                 <td class="d-flex flex-column flex-md-row justify-content-md-start">
-                    <a class="btn btn-danger mb-1 mb-md-0 mr-md-2" sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')"
-                       th:href="@{'/pojistenci/delete/' + ${pojistenec.pojistenecId}}">Odstranit</a>
+                    <a class="btn btn-danger mb-1 mb-md-0 mr-md-2" sec:authorize="hasAnyRole('ADMIN', 'POLICYHOLDER')"
+                       th:href="@{'/pojistenci/delete/' + ${insured.insuredId}}">Odstranit</a>
                     <a class="btn btn-warning"
-                       th:href="@{'/pojistenci/edit/' + ${pojistenec.pojistenecId}}">Editovat</a>
+                       th:href="@{'/pojistenci/edit/' + ${insured.insuredId}}">Editovat</a>
 
             </tr>
             </tbody>
         </table>
-        <div id="paginace" th:if="${paginace}" class="d-flex justify-content-center align-items-center mt-3 mb-sm-3"></div>
+        <div id="pagination" th:if="${pagination}" class="d-flex justify-content-center align-items-center mt-3 mb-sm-3"></div>
     </section>
     <footer class="d-flex justify-content-center align-items-center mt-3 mb-sm-3">
         <nav aria-label="Stránkování">
             <ul class="pagination">
-                <li th:if="${predchoziStrana}" class="page-item">
-                    <a class="page-link" th:href="@{'/pojistenci/stranka/' + ${predchoziStrana}}" aria-label="Prev">
+                <li th:if="${previousPage}" class="page-item">
+                    <a class="page-link" th:href="@{'/pojistenci/stranka/' + ${previousPage}}" aria-label="Prev">
                         <span aria-hidden="true">&laquo;</span>
                         <span class="sr-only">Prev</span>
                     </a>
                 </li>
-                <li th:if="${predpredchoziStrana}" class="page-item"><a class="page-link"
-                                                                        th:text="${predpredchoziStrana}"
-                                                                        th:href="@{'/pojistenci/stranka/' + ${predpredchoziStrana}}"></a>
+                <li th:if="${pageBeforeLast}" class="page-item"><a class="page-link"
+                                                                        th:text="${pageBeforeLast}"
+                                                                        th:href="@{'/pojistenci/stranka/' + ${pageBeforeLast}}"></a>
                 </li>
-                <li th:if="${predchoziStrana}" class="page-item"><a class="page-link" th:text="${predchoziStrana}"
-                                                                    th:href="@{'/pojistenci/stranka/' + ${predchoziStrana}}"></a>
+                <li th:if="${previousPage}" class="page-item"><a class="page-link" th:text="${previousPage}"
+                                                                    th:href="@{'/pojistenci/stranka/' + ${previousPage}}"></a>
                 </li>
-                <li th:if="${soucasnaStrana}" class="page-item active"><a class="page-link" th:text="${soucasnaStrana}"
+                <li th:if="${thisPage}" class="page-item active"><a class="page-link" th:text="${thisPage}"
                                                                           href="#"></a></li>
-                <li th:if="${pristiStrana}" class="page-item"><a class="page-link" th:text="${pristiStrana}"
-                                                                 th:href="@{'/pojistenci/stranka/' + ${pristiStrana}}"></a>
+                <li th:if="${nextPage}" class="page-item"><a class="page-link" th:text="${nextPage}"
+                                                                 th:href="@{'/pojistenci/stranka/' + ${nextPage}}"></a>
                 </li>
-                <li th:if="${prespristiStrana}" class="page-item"><a class="page-link" th:text="${prespristiStrana}"
-                                                                     th:href="@{'/pojistenci/stranka/' + ${prespristiStrana}}"></a>
+                <li th:if="${pageAfterNext}" class="page-item"><a class="page-link" th:text="${pageAfterNext}"
+                                                                     th:href="@{'/pojistenci/stranka/' + ${pageAfterNext}}"></a>
                 </li>
 
-                <li th:if="${pristiStrana}" class="page-item">
-                    <a class="page-link" th:href="@{'/pojistenci/stranka/' + ${pristiStrana}}" aria-label="Next">
+                <li th:if="${nextPage}" class="page-item">
+                    <a class="page-link" th:href="@{'/pojistenci/stranka/' + ${nextPage}}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                         <span class="sr-only">Next</span>
                     </a>

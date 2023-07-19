@@ -4,66 +4,65 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "seznam_pojistencu")
+@Table(name = "insured_list")
 public class InsuredEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long pojistenecId;
+    private long insuredId;
 
     @Column(nullable = false)
-    private String jmeno;
+    private String firstName;
 
     @Column(nullable = false)
-    private String prijmeni;
+    private String lastName;
 
     @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private String telefon;
+    private String phoneNumber;
 
     @Column(nullable = false)
-    private String ulice;
+    private String street;
 
     @Column(nullable = false)
-    private String mesto;
+    private String city;
 
     @Column(nullable = false)
-    private String psc;
+    private String zip;
 
-    @OneToMany(mappedBy = "pojistenec")
-    private List<InsuranceEntity> seznamPojisteni;
+    @OneToMany(mappedBy = "insured")
+    private List<InsuranceEntity> insuranceList;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
     @Column(nullable = false)
-    private long pojistnikId;
+    private long policyholderId;
 
-
-    public long getPojistenecId() {
-        return pojistenecId;
+    public long getInsuredId() {
+        return insuredId;
     }
 
-    public void setPojistenecId(long pojistenecId) {
-        this.pojistenecId = pojistenecId;
+    public void setInsuredId(long insuredId) {
+        this.insuredId = insuredId;
     }
 
-    public String getJmeno() {
-        return jmeno;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setJmeno(String jmeno) {
-        this.jmeno = jmeno;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getPrijmeni() {
-        return prijmeni;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setPrijmeni(String prijmeni) {
-        this.prijmeni = prijmeni;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -74,59 +73,59 @@ public class InsuredEntity {
         this.email = email;
     }
 
-    public String getTelefon() {
-        return telefon;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setTelefon(String telefon) {
-        this.telefon = telefon;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public String getUlice() {
-        return ulice;
+    public String getStreet() {
+        return street;
     }
 
-    public void setUlice(String ulice) {
-        this.ulice = ulice;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public String getMesto() {
-        return mesto;
+    public String getCity() {
+        return city;
     }
 
-    public void setMesto(String mesto) {
-        this.mesto = mesto;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getPsc() {
-        return psc;
+    public String getZip() {
+        return zip;
     }
 
-    public void setPsc(String psc) {
-        this.psc = psc;
+    public void setZip(String zip) {
+        this.zip = zip;
     }
 
-    public List<InsuranceEntity> getSeznamPojisteni() {
-        return seznamPojisteni;
+    public List<InsuranceEntity> getInsuranceList() {
+        return insuranceList;
     }
 
-    public void setSeznamPojisteni(List<InsuranceEntity> seznamPojisteni) {
-        this.seznamPojisteni = seznamPojisteni;
+    public void setInsuranceList(List<InsuranceEntity> insuranceList) {
+        this.insuranceList = insuranceList;
     }
 
-    public UserEntity getUserEntity() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUserEntity(UserEntity userEntity) {
-        this.user = userEntity;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
-    public long getPojistnikId() {
-        return pojistnikId;
+    public long getPolicyholderId() {
+        return policyholderId;
     }
 
-    public void setPojistnikId(long pojistnikId) {
-        this.pojistnikId = pojistnikId;
+    public void setPolicyholderId(long policyholderId) {
+        this.policyholderId = policyholderId;
     }
 }

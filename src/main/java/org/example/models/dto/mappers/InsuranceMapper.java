@@ -13,7 +13,7 @@ public interface InsuranceMapper {
     InsuranceDTO toDTO(InsuranceEntity source);
 
 
-    void updatePojisteniDTO(InsuranceDTO source, @MappingTarget InsuranceDTO target);
+    void updateInsuranceDTO(InsuranceDTO source, @MappingTarget InsuranceDTO target);
 
-    void updatePojisteniEntity(InsuranceDTO source, @MappingTarget InsuranceEntity target);
+    void updateInsuranceEntity(InsuranceDTO source, @MappingTarget InsuranceEntity target);
 }

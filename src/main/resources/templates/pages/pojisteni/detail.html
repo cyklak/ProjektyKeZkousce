@@ -12,24 +12,24 @@
         <img th:src="@{/images/klient.png}" alt="klient" class="d-none d-md-block mr-3">
         <div class="mr-auto">
             <h3>Detail pojištění</h3>
-            <p><strong>Typ pojištění: </strong><span th:text="${pojisteni.typPojisteni}"></span></p>
-            <p><strong>Částka: </strong><span th:text="${pojisteni.castka}"></span></p>
-            <p><strong>Předmět pojištění: </strong><span th:text="${pojisteni.predmetPojisteni}"></span></p>
+            <p><strong>Typ pojištění: </strong><span th:text="${insurance.insuranceType}"></span></p>
+            <p><strong>Částka: </strong><span th:text="${insurance.amount}"></span></p>
+            <p><strong>Předmět pojištění: </strong><span th:text="${insurance.insuredObject}"></span></p>
         </div>
         <div>
             <h3 class="invisible d-none d-sm-block">j</h3>
-            <p><strong>Platnost od: </strong><span th:text="${pojisteni.platnostOd}"></span></p>
-            <p><strong>Platnost do: </strong><span th:text="${pojisteni.platnostDo}"></span></p>
+            <p><strong>Platnost od: </strong><span th:text="${insurance.validFrom}"></span></p>
+            <p><strong>Platnost do: </strong><span th:text="${insurance.validUntil}"></span></p>
         </div>
     </div>
 
     <footer class="d-flex flex-column flex-sm-row justify-content-center mt-3">
-        <a sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')" th:href="@{'/pojisteni/' + ${pojistenec.pojistenecId} + '/edit/' + ${pojisteni.pojisteniId}}"
+        <a sec:authorize="hasAnyRole('ADMIN', 'POLICYHOLDER')" th:href="@{'/pojisteni/' + ${insured.insuredId} + '/edit/' + ${insurance.insuranceId}}"
            class="btn btn-warning mx-0 mx-sm-1 my-1 my-sm-0">Editovat pojištění</a>
-        <a sec:authorize="hasAnyRole('ADMIN', 'POJISTNIK')"
-           th:href="@{'/pojisteni/' + ${pojistenec.pojistenecId} + '/delete/' + ${pojisteni.pojisteniId}}"
+        <a sec:authorize="hasAnyRole('ADMIN', 'POLICYHOLDER')"
+           th:href="@{'/pojisteni/' + ${insured.insuredId} + '/delete/' + ${insurance.insuranceId}}"
            class="btn btn-danger mx-0 mx-sm-1 my-1 my-sm-0">Odstranit pojištění</a>
-        <a th:href="@{'/pojistenci/' + ${pojistenec.pojistenecId}}" class="btn btn-secondary mx-0 mx-sm-1 my-1 my-md-0">Detail pojištěnce</a>
+        <a th:href="@{'/pojistenci/' + ${insured.insuredId}}" class="btn btn-secondary mx-0 mx-sm-1 my-1 my-md-0">Detail pojištěnce</a>
     </footer>
 </article>
 

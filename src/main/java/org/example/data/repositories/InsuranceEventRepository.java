@@ -11,10 +11,10 @@ public interface InsuranceEventRepository extends CrudRepository<InsuranceEventE
 
     Page<InsuranceEventEntity> findAll(Pageable page);
 
-    Page<InsuranceEventEntity> findAllBypojistenecId(Pageable page, Long pojistenecId);
+    List<InsuranceEventEntity> findAllByinsuredId(Pageable page, Long insuredId);
 
-    List<InsuranceEventEntity> findAllBypojistenecId(Long pojistenecId);
+    List<InsuranceEventEntity> findAllByinsuredId(Long insuredId);
 
-    List<InsuranceEventEntity> findAllBypojistnikId(Long pojistnikId);
+    List<InsuranceEventEntity> findAllBypolicyholderId(Long policyholderId);
 
 }

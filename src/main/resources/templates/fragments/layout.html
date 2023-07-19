@@ -10,7 +10,7 @@
     <link rel="stylesheet" th:href="@{/styles/bootstrap.min.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/styles/style.css}" type="text/css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script th:src="@{/scripts/paginace.js}"></script>
+    <script th:src="@{/scripts/pagination.js}"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -35,25 +35,25 @@
 
         <div class="collapse navbar-collapse" id="obsah-navigacni-listy">
             <ul class="navbar-nav mr-auto ml-md-5 mt-sm-4 mt-md-0">
-                <li th:unless="${pojistenciAktivni}" class="nav-item" sec:authorize="isAuthenticated()">
+                <li th:unless="${insuredActive}" class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{'/pojistenci/stranka/1'}">Pojištěnci <span
                             class="sr-only">(aktuální)</span></a>
                 </li>
-                <li th:if="${pojistenciAktivni}" class="nav-item" sec:authorize="isAuthenticated()">
+                <li th:if="${insuredActive}" class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link active" th:href="@{'/pojistenci/stranka/1'}">Pojištěnci <span class="sr-only">(aktuální)</span></a>
                 </li>
-                <li class="nav-item" th:unless="${pojisteniAktivni}" sec:authorize="isAuthenticated()">
+                <li class="nav-item" th:unless="${insuranceActive}" sec:authorize="isAuthenticated()">
                     <a class="nav-link" th:href="@{'/pojisteni/stranka/1'}">Pojištění <span
                             class="sr-only">(aktuální)</span></a>
                 </li>
-                <li class="nav-item" th:if="${pojisteniAktivni}" sec:authorize="isAuthenticated()">
+                <li class="nav-item" th:if="${insuranceActive}" sec:authorize="isAuthenticated()">
                     <a class="nav-link active" th:href="@{'/pojisteni/stranka/1'}">Pojištění<span class="sr-only">(aktuální)</span></a>
                 </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()" th:unless="${udalostiAktivni}">
+                <li class="nav-item" sec:authorize="isAuthenticated()" th:unless="${eventsActive}">
                     <a class="nav-link" th:href="@{'/udalosti/stranka/1'}">Události <span
                             class="sr-only">(aktuální)</span></a>
                 </li>
-                <li class="nav-item" th:if="${udalostiAktivni}" sec:authorize="isAuthenticated()">
+                <li class="nav-item" th:if="${eventsActive}" sec:authorize="isAuthenticated()">
                     <a class="nav-link active" th:href="@{'/udalosti/stranka/1'}">Události <span class="sr-only">(aktuální)</span></a>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()" th:unless="${credits}">
@@ -74,7 +74,7 @@
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <span class="nav-link disabled">Admin <span class="sr-only">(aktuální)</span></span>
                 </li>
-                <li class="nav-item" sec:authorize="hasAnyRole('POJISTENY', 'POJISTNIK')">
+                <li class="nav-item" sec:authorize="hasAnyRole('INSURED', 'POLICYHOLDER')">
                     <span class="nav-link disabled">Uživatel <span class="sr-only">(aktuální)</span></span>
                 </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">

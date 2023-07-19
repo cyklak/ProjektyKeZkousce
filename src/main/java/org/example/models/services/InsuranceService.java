@@ -40,9 +40,9 @@ public class InsuranceService {
     }
 
 
-    public void create(InsuranceDTO pojisteni) {
-        InsuranceEntity newPojisteni = insuranceMapper.toEntity(pojisteni);
-        insuranceRepository.save(newPojisteni);
+    public void create(InsuranceDTO insurance) {
+        InsuranceEntity newInsurance = insuranceMapper.toEntity(insurance);
+        insuranceRepository.save(newInsurance);
     }
 
     public Long getInsuranceCount() {
@@ -50,72 +50,74 @@ public class InsuranceService {
     }
 
 
-    public List<InsuranceDTO> getAllByPojistenecId(Long pojistenecId) {
-        List<InsuranceEntity> seznamPojisteni = insuredRepository.findById(pojistenecId).orElseThrow().getSeznamPojisteni();
+    public List<InsuranceDTO> getAllByInsuredId(Long insuredId) {
+        List<InsuranceEntity> insuranceList = insuredRepository.findById(insuredId).orElseThrow().getInsuranceList();
         List<InsuranceDTO> insuranceDTO = new ArrayList<>();
-        for (InsuranceEntity pojisteni : seznamPojisteni) {
-            insuranceDTO.add(insuranceMapper.toDTO(pojisteni));
+        for (InsuranceEntity insurance : insuranceList) {
+            insuranceDTO.add(insuranceMapper.toDTO(insurance));
         }
         return insuranceDTO;
     }
 
-    public List<InsuranceDTO> getPojisteniByUserId(long userId) {
+    public List<InsuranceDTO> getInsurancesByUserId(long userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow();
-        List<InsuredEntity> seznamPojistencu = insuredRepository.findAllByPojistnikId(userId);
+        List<InsuredEntity> insuredList = insuredRepository.findAllBypolicyholderId(userId);
         List<InsuranceEntity> result = new ArrayList<>();
-        for (InsuredEntity e : seznamPojistencu) {
-            result.addAll(e.getSeznamPojisteni());}
+        for (InsuredEntity e : insuredList) {
+            result.addAll(e.getInsuranceList());
+        }
         List<InsuranceDTO> result2 = new ArrayList<>();
-        for (InsuranceEntity pojisteni: result){
-            result2.add(insuranceMapper.toDTO(pojisteni));}
+        for (InsuranceEntity insurance : result) {
+            result2.add(insuranceMapper.toDTO(insurance));
+        }
 
         return result2;
     }
 
 
-    public InsuranceDTO getById(long pojisteniId) {
-        InsuranceEntity fetchedPojisteni = getPojisteniOrThrow(pojisteniId);
+    public InsuranceDTO getById(long insuranceId) {
+        InsuranceEntity fetchedInsurance = getInsuranceOrThrow(insuranceId);
 
-        return insuranceMapper.toDTO(fetchedPojisteni);
+        return insuranceMapper.toDTO(fetchedInsurance);
     }
 
-    private InsuranceEntity getPojisteniOrThrow(long pojisteniID) {
+    private InsuranceEntity getInsuranceOrThrow(long insuranceID) {
         return insuranceRepository
-                .findById(pojisteniID)
+                .findById(insuranceID)
                 .orElseThrow(InsuranceNotFoundException::new);
     }
 
-    public InsuranceEntity getPojisteniEntity(long pojisteniID) {
+    public InsuranceEntity getPojisteniEntity(long insuranceID) {
         return insuranceRepository
-                .findById(pojisteniID)
+                .findById(insuranceID)
                 .orElseThrow(InsuranceNotFoundException::new);
     }
 
 
-    public void remove(long pojisteniId) {
-        InsuranceEntity fetchedEntity = getPojisteniOrThrow(pojisteniId);
+    public void remove(long insuranceId) {
+        InsuranceEntity fetchedEntity = getInsuranceOrThrow(insuranceId);
         insuranceRepository.delete(fetchedEntity);
     }
 
 
-    public void edit(InsuranceDTO pojisteni) {
-        InsuranceEntity fetchedPojisteni = getPojisteniOrThrow(pojisteni.getPojisteniId());
-        LocalDate puvodniPlatnostod = fetchedPojisteni.getPlatnostOd();
-        LocalDate puvodniPlatnostDo = fetchedPojisteni.getPlatnostDo();
-        insuranceMapper.updatePojisteniEntity(pojisteni, fetchedPojisteni);
-        if (puvodniPlatnostod.isBefore(LocalDate.now()) || puvodniPlatnostod.isEqual(LocalDate.now()))
-            fetchedPojisteni.setPlatnostOd(puvodniPlatnostod);
-        if (puvodniPlatnostDo.isBefore(LocalDate.now()))
-            fetchedPojisteni.setPlatnostDo(puvodniPlatnostDo);
-        insuranceRepository.save(fetchedPojisteni);
+    public void edit(InsuranceDTO insurance) {
+        InsuranceEntity fetchedInsurance = getInsuranceOrThrow(insurance.getInsuranceId());
+        LocalDate originallyValidFrom = fetchedInsurance.getValidFrom();
+        LocalDate originallyValidUntil = fetchedInsurance.getValidUntil();
+        insuranceMapper.updateInsuranceEntity(insurance, fetchedInsurance);
+        if (originallyValidFrom.isBefore(LocalDate.now()) || originallyValidFrom.isEqual(LocalDate.now()))
+            fetchedInsurance.setValidFrom(originallyValidFrom);
+        if (originallyValidUntil.isBefore(LocalDate.now()))
+            fetchedInsurance.setValidUntil(originallyValidUntil);
+        insuranceRepository.save(fetchedInsurance);
     }
 
 
-    public List<InsuranceDTO> getPojisteni(int currentPage) {
-        Page<InsuranceEntity> pageOfPojisteni = insuranceRepository.findAll(PageRequest.of(currentPage, 10));
-        List<InsuranceEntity> pojisteniEntities = pageOfPojisteni.getContent();
+    public List<InsuranceDTO> getInsurances(int currentPage) {
+        Page<InsuranceEntity> pageOfInsurances = insuranceRepository.findAll(PageRequest.of(currentPage, 10));
+        List<InsuranceEntity> insuranceEntities = pageOfInsurances.getContent();
         List<InsuranceDTO> result = new ArrayList<>();
-        for (InsuranceEntity e : pojisteniEntities) {
+        for (InsuranceEntity e : insuranceEntities) {
             result.add(insuranceMapper.toDTO(e));
         }
         return result;

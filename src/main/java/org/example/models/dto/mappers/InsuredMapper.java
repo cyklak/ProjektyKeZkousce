@@ -11,7 +11,7 @@ public interface InsuredMapper {
 
     InsuredDTO toDTO(InsuredEntity source);
 
-    void updatePojistenecDTO(InsuredDTO source, @MappingTarget InsuredDTO target);
+    void updateInsuredDTO(InsuredDTO source, @MappingTarget InsuredDTO target);
 
-    void updatePojistenecEntity(InsuredDTO source, @MappingTarget InsuredEntity target);
+    void updateInsuredEntity(InsuredDTO source, @MappingTarget InsuredEntity target);
 }

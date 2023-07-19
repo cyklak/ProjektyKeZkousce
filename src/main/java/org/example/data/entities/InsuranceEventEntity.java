@@ -6,109 +6,108 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "PojistneUdalosti")
+@Table(name = "InsuranceEvents")
 public class InsuranceEventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long pojistnaUdalostId;
+    private long insuranceEventId;
 
     @Column(nullable = false)
-    private String NazevUdalosti;
+    private String nameOfEvent;
 
     @Column(nullable = false)
-    private Date datumUdalosti;
+    private Date dateOfEvent;
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String popisUdalosti;
+    private String eventDescription;
 
     @ManyToMany
-    @JoinTable(name = "Pojisteni_a_Udalosti",
-            joinColumns = @JoinColumn(name = "pojistna_udalost_id"),
-            inverseJoinColumns = @JoinColumn(name = "pojisteni_id"))
-    private List<InsuranceEntity> pojisteni;
+    @JoinTable(name = "Insurances_and_Events",
+            joinColumns = @JoinColumn(name = "insurance_event_id"),
+            inverseJoinColumns = @JoinColumn(name = "insurance_id"))
+    private List<InsuranceEntity> insurances;
     @Column(nullable = false)
-    private Long pojistenecId;
-
-    @Column(nullable = false)
-    private Long pojistnikId;
+    private Long insuredId;
 
     @Column(nullable = false)
-    private String jmenoPojisteneho;
+    private Long policyholderId;
 
     @Column(nullable = false)
-    private String prijmeniPojisteneho;
+    private String insuredFirstName;
 
+    @Column(nullable = false)
+    private String insuredLastName;
 
-    public long getPojistnaUdalostId() {
-        return pojistnaUdalostId;
+    public long getInsuranceEventId() {
+        return insuranceEventId;
     }
 
-    public void setPojistnaUdalostId(long pojistnaUdalostId) {
-        this.pojistnaUdalostId = pojistnaUdalostId;
+    public void setInsuranceEventId(long insuranceEventId) {
+        this.insuranceEventId = insuranceEventId;
     }
 
-    public String getNazevUdalosti() {
-        return NazevUdalosti;
+    public String getNameOfEvent() {
+        return nameOfEvent;
     }
 
-    public void setNazevUdalosti(String nazevUdalosti) {
-        NazevUdalosti = nazevUdalosti;
+    public void setNameOfEvent(String nameOfEvent) {
+        this.nameOfEvent = nameOfEvent;
     }
 
-    public Date getDatumUdalosti() {
-        return datumUdalosti;
+    public Date getDateOfEvent() {
+        return dateOfEvent;
     }
 
-    public void setDatumUdalosti(Date datumUdalosti) {
-        this.datumUdalosti = datumUdalosti;
+    public void setDateOfEvent(Date dateOfEvent) {
+        this.dateOfEvent = dateOfEvent;
     }
 
-    public String getPopisUdalosti() {
-        return popisUdalosti;
+    public String getEventDescription() {
+        return eventDescription;
     }
 
-    public void setPopisUdalosti(String popisUdalosti) {
-        this.popisUdalosti = popisUdalosti;
+    public void setEventDescription(String eventDescription) {
+        this.eventDescription = eventDescription;
     }
 
-    public List<InsuranceEntity> getPojisteni() {
-        return pojisteni;
+    public List<InsuranceEntity> getInsurances() {
+        return insurances;
     }
 
-    public void setPojisteni(List<InsuranceEntity> pojisteni) {
-        this.pojisteni = pojisteni;
+    public void setInsurances(List<InsuranceEntity> insurances) {
+        this.insurances = insurances;
     }
 
-    public Long getPojistenecId() {
-        return pojistenecId;
+    public Long getInsuredId() {
+        return insuredId;
     }
 
-    public void setPojistenecId(Long pojistenecId) {
-        this.pojistenecId = pojistenecId;
+    public void setInsuredId(Long insuredId) {
+        this.insuredId = insuredId;
     }
 
-    public Long getPojistnikId() {
-        return pojistnikId;
+    public Long getPolicyholderId() {
+        return policyholderId;
     }
 
-    public void setPojistnikId(Long pojistnikId) {
-        this.pojistnikId = pojistnikId;
+    public void setPolicyholderId(Long policyholderId) {
+        this.policyholderId = policyholderId;
     }
 
-    public String getJmenoPojisteneho() {
-        return jmenoPojisteneho;
+    public String getInsuredFirstName() {
+        return insuredFirstName;
     }
 
-    public void setJmenoPojisteneho(String jmenoPojisteneho) {
-        this.jmenoPojisteneho = jmenoPojisteneho;
+    public void setInsuredFirstName(String insuredFirstName) {
+        this.insuredFirstName = insuredFirstName;
     }
 
-    public String getPrijmeniPojisteneho() {
-        return prijmeniPojisteneho;
+    public String getInsuredLastName() {
+        return insuredLastName;
     }
 
-    public void setPrijmeniPojisteneho(String prijmeniPojisteneho) {
-        this.prijmeniPojisteneho = prijmeniPojisteneho;
+    public void setInsuredLastName(String insuredLastName) {
+        this.insuredLastName = insuredLastName;
     }
 }
