@@ -52,7 +52,7 @@ public class UserEntity implements UserDetails {
         if (admin) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));}
         else {
-        if (roles.contains(POLICYHOLER))
+        if (roles.contains(POLICYHOLDER))
             authorities.add(new SimpleGrantedAuthority("ROLE_POLICYHOLDER"));
         if (roles.contains(INSURED))
             authorities.add(new SimpleGrantedAuthority("ROLE_INSURED"));}

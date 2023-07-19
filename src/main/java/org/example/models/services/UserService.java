@@ -45,7 +45,7 @@ public class UserService implements UserDetailsService {
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         List<Role> roles = new ArrayList<>();
-        roles.add(POLICYHOLER);
+        roles.add(POLICYHOLDER);
         userEntity.setRole(roles);
         userEntity.setAdmin(false);
 

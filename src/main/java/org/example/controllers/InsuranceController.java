@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.example.models.dto.Role.POLICYHOLER;
+import static org.example.models.dto.Role.POLICYHOLDER;
 
 @Controller
 @RequestMapping("/pojisteni/")
@@ -39,6 +39,7 @@ public class InsuranceController {
         this.insuranceService = insuranceService;
     }
 
+
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping("stranka/{currentPage}")
     public String renderIndex(Model model, @PathVariable int currentPage) {
@@ -47,7 +48,7 @@ public class InsuranceController {
         List<InsuranceDTO> insurances = new ArrayList<>();
         if (user.isAdmin()) {
             insurances = insuranceService.getInsurances(currentPage - 1);
-        } else if (user.getRole().contains(POLICYHOLER)) {
+        } else if (user.getRole().contains(POLICYHOLDER)) {
             insurances = insuranceService.getInsurancesByUserId(user.getUserId());
             model.addAttribute("pagination", 1);
         } else {
@@ -176,7 +177,7 @@ public class InsuranceController {
             RedirectAttributes redirectAttributes
     ) {
         redirectAttributes.addFlashAttribute("error", "Pojištění nenalezeno.");
-        return "redirect:/pojistenci/";
+        return "redirect:/pojisteni/stranka/1";
     }
 
 }

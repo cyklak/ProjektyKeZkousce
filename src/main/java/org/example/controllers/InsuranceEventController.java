@@ -69,12 +69,14 @@ public class InsuranceEventController {
                     model.addAttribute("pageBeforeLast", currentPage - 2);
                 }
             }
-        } else if (user.getRole().contains(POLICYHOLER)) {
-            events = eventService.getEventsByUserId(user.getUserId());
-            model.addAttribute("pagination", 1);
         } else {
-            events = eventService.getEventsByInsuredId(user.getInsured().getInsuredId());
-            model.addAttribute("pagination", 1);
+            if (user.getRole().contains(POLICYHOLDER)) {
+                events = eventService.getEventsByUserId(user.getUserId());}
+            else {
+                events = eventService.getEventsByInsuredId(user.getInsured().getInsuredId());}
+            if (insuranceService.getAllByInsuredId(user.getUserId()).size()>0)
+                model.addAttribute("newEventButton",1);
+                model.addAttribute("pagination", 1);
         }
         model.addAttribute("events", events);
 
@@ -199,8 +201,8 @@ public class InsuranceEventController {
     public String handleEventNotFoundException(
             RedirectAttributes redirectAttributes
     ) {
-        redirectAttributes.addFlashAttribute("error", "Pojištěnec nenalezen.");
-        return "redirect:/stranka/{currentPage}";
+        redirectAttributes.addFlashAttribute("error", "Událost nenalezena.");
+        return "redirect:/udalosti/stranka/1";
     }
 
 }

@@ -14,7 +14,7 @@
             Pokud pojistník vytvoří pojistnou událost, bude se vázat k jeho pojištěním.</p>
     </header>
     <section class="d-flex flex-column align-items-center col-xl-8 col-sm">
-        <a sec:authorize="hasRole('INSURED')" class="btn btn-primary" th:href="@{'/udalosti/novaUdalost'}">Nová událost</a>
+        <a sec:authorize="hasRole('INSURED')" th:if="${newEventButton}" class="btn btn-primary" th:href="@{'/udalosti/novaUdalost'}">Nová událost</a>
         <table class="table mt-3" style="border: 2px solid black">
             <thead>
             <th class="col-3" style="border: 2px solid black">Jméno pojištěnce</th>

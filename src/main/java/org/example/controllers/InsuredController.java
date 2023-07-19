@@ -48,7 +48,7 @@ public class InsuredController {
         List<InsuredDTO> insuredList = new ArrayList<>();
         if (user.isAdmin()) {
             insuredList = insuredService.getInsuredList(currentPage - 1);
-        } else if ((user.getRole().contains(POLICYHOLER))) {
+        } else if ((user.getRole().contains(POLICYHOLDER))) {
             insuredList = insuredService.getInsuredListByUserId(user.getUserId());
             model.addAttribute("pagination", 1);
         } else {
