@@ -16,11 +16,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-
     private final UserService userService;
 
-    public AccountController(UserService userService) {
+    public AccountController(UserService userService) throws IllegalArgumentException {
+        if (userService == null)
+            throw new IllegalArgumentException();
         this.userService = userService;
+
     }
 
     @GetMapping("login")
