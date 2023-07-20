@@ -35,13 +35,27 @@ public class InsuranceEventController {
 
     private final InsuranceEventMapper eventMapper;
 
-    public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceEventService eventService, InsuranceEventMapper eventMapper) {
+    /** InsuranceEventController Constructor
+     * @param insuranceService
+     * @param insuredService
+     * @param eventService
+     * @param eventMapper
+     * @throws IllegalArgumentException prevents null values in constructor arguments
+     */
+    public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceEventService eventService, InsuranceEventMapper eventMapper) throws IllegalArgumentException {
+        if (insuredService == null || eventService == null || insuranceService == null || eventMapper == null)
+            throw new IllegalArgumentException();
         this.insuranceService = insuranceService;
         this.insuredService = insuredService;
         this.eventService = eventService;
         this.eventMapper = eventMapper;
     }
 
+    /**
+     * @param model
+     * @param currentPage if user is admin, 10 items per page are displayed
+     * @return list of all insurance events related to the current user; if user is admin, list of all events in InsuranceEventRepo is fetched
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping("stranka/{currentPage}")
     public String renderIndex(
@@ -83,6 +97,11 @@ public class InsuranceEventController {
         return "pages/udalosti/index";
     }
 
+    /** this method shows details of an insurance event
+     * @param eventId
+     * @param model
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping("{eventId}/detail")
     public String renderDetail(@PathVariable long eventId,
@@ -97,6 +116,11 @@ public class InsuranceEventController {
         return "pages/udalosti/detail";
     }
 
+    /**
+     * @param event
+     * @param model
+     * @return a new insurance event form
+     */
     @Secured({"ROLE_ADMIN", "ROLE_INSURED"})
     @GetMapping("novaUdalost")
     public String renderNewEvent(
@@ -120,6 +144,13 @@ public class InsuranceEventController {
         return "pages/udalosti/novaUdalost";
     }
 
+    /** creates a new insurance event
+     * @param eventDTO
+     * @param result
+     * @param model
+     * @param redirectAttributes
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_INSURED"})
     @PostMapping("novaUdalost")
     public String createNewEvent(
@@ -141,6 +172,12 @@ public class InsuranceEventController {
     }
 
 
+    /**
+     * @param insuranceEventId
+     * @param eventDTO
+     * @param model
+     * @return an insurance event edit form
+     */
     @Secured({"ROLE_ADMIN", "ROLE_INSURED"})
     @GetMapping("edit/{insuranceEventId}")
     public String renderEditForm(
@@ -165,6 +202,14 @@ public class InsuranceEventController {
         return "pages/udalosti/edit";
     }
 
+    /** edits a selected insurance event
+     * @param insuranceEventId
+     * @param eventDTO
+     * @param result
+     * @param redirectAttributes
+     * @param model
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_INSURED"})
     @PostMapping("edit/{insuranceEventId}")
     public String editEvent(
@@ -187,6 +232,11 @@ public class InsuranceEventController {
 
     }
 
+    /** deletes a selected insurance event
+     * @param insuranceEventId
+     * @param redirectAttributes
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_INSURED"})
     @GetMapping("delete/{insuranceEventId}")
     public String deleteEvent(@PathVariable long insuranceEventId,
@@ -197,6 +247,10 @@ public class InsuranceEventController {
         return "redirect:/udalosti/stranka/1";
     }
 
+    /** if user tries to fetch a non-existing event from InsuranceEventRepository, this method displays an error message
+     * @param redirectAttributes
+     * @return
+     */
     @ExceptionHandler({EventNotFoundException.class})
     public String handleEventNotFoundException(
             RedirectAttributes redirectAttributes

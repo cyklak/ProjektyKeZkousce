@@ -35,29 +35,44 @@ public class InsuranceEventService {
 
     private final InsuranceService insuranceService;
 
-    private final InsuranceEventMapper udalostMapper;
+    private final InsuranceEventMapper eventMapper;
 
 
     private final InsuranceEventRepository eventRepository;
 
 
-    public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper udalostMapper, InsuranceEventRepository eventRepository) {
+    /** InsuranceEventService constructor
+     * @param insuranceRepository
+     * @param insuredRepository
+     * @param insuranceMapper
+     * @param insuranceService
+     * @param eventMapper
+     * @param eventRepository
+     * @throws IllegalArgumentException  prevents null values in constructor arguments
+     */
+    public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper eventMapper, InsuranceEventRepository eventRepository) throws IllegalArgumentException {
+        if (insuranceRepository == null || insuredRepository == null || insuranceService == null || insuranceMapper == null || eventMapper == null || eventRepository == null)
+            throw new IllegalArgumentException();
         this.insuranceRepository = insuranceRepository;
         this.insuredRepository = insuredRepository;
         this.insuranceMapper = insuranceMapper;
         this.insuranceService = insuranceService;
-        this.udalostMapper = udalostMapper;
+        this.eventMapper = eventMapper;
         this.eventRepository = eventRepository;
     }
 
 
+    /** creates a new insurance event
+     * @param event
+     * @param insuredId
+     */
     public void create(InsuranceEventDTO event, Long insuredId) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        InsuranceEventEntity eventEntity = udalostMapper.toEntity(event);
+        InsuranceEventEntity eventEntity = eventMapper.toEntity(event);
         eventEntity.setInsuredId(insuredId);
         eventEntity.setInsurances(new ArrayList<>());
         for (Long pojisteniId : event.getInsuranceIds()) {
-            eventEntity.getInsurances().add(insuranceService.getPojisteniEntity(pojisteniId));
+            eventEntity.getInsurances().add(insuranceService.getInsuranceOrThrow(pojisteniId));
         }
         if (user.getRole().contains(Role.POLICYHOLDER))
             eventEntity.setPolicyholderId(user.getUserId());
@@ -70,27 +85,42 @@ public class InsuranceEventService {
     }
 
 
+    /**
+     * @param currentPage
+     * @return pages of 10 items of all events in eventRepository
+     */
     public List<InsuranceEventDTO> getEvents(int currentPage) {
         Page<InsuranceEventEntity> pageOfPeople = eventRepository.findAll(PageRequest.of(currentPage, 10));
         List<InsuranceEventEntity> eventEntities = pageOfPeople.getContent();
         List<InsuranceEventDTO> result = new ArrayList<>();
         for (InsuranceEventEntity e : eventEntities) {
-            result.add(udalostMapper.toDTO(e));
+            result.add(eventMapper.toDTO(e));
         }
         return result;
     }
 
+    /**
+     * @return number of events in eventRepository
+     */
     public Long getEventCount() {
         return eventRepository.count();
     }
 
 
+    /**
+     * @param eventId
+     * @return insurance event DTO by its ID
+     */
     public InsuranceEventDTO getById(long eventId) {
         InsuranceEventEntity fetchedEvent = getUdalostOrThrow(eventId);
 
-        return udalostMapper.toDTO(fetchedEvent);
+        return eventMapper.toDTO(fetchedEvent);
     }
 
+    /**
+     * @param eventID
+     * @return insurance event Entity by its ID
+     */
     private InsuranceEventEntity getUdalostOrThrow(long eventID) {
         return eventRepository
                 .findById(eventID)
@@ -98,25 +128,37 @@ public class InsuranceEventService {
     }
 
 
+    /**
+     * @param insuredId
+     * @return all insurance events of one insured person
+     */
     public List<InsuranceEventDTO> getEventsByInsuredId(Long insuredId) {
         List<InsuranceEventEntity> eventEntities = eventRepository.findAllByinsuredId(insuredId);
         List<InsuranceEventDTO> result = new ArrayList<>();
         for (InsuranceEventEntity e : eventEntities) {
-            result.add(udalostMapper.toDTO(e));
+            result.add(eventMapper.toDTO(e));
         }
         return result;
     }
 
 
+    /**
+     * @param userId
+     * @return all insurance events related to insurances paid for by one policyholder
+     */
     public List<InsuranceEventDTO> getEventsByUserId(long userId) {
         List<InsuranceEventEntity> eventList = eventRepository.findAllBypolicyholderId(userId);
         List<InsuranceEventDTO> result = new ArrayList<>();
         for (InsuranceEventEntity event : eventList) {
-            result.add(udalostMapper.toDTO(event));
+            result.add(eventMapper.toDTO(event));
         }
         return result;
     }
 
+    /**
+     * @param eventId
+     * @return DTOs of all insurances related to a specific insurance
+     */
     public List<InsuranceDTO> getInsurancesByEventId(Long eventId) {
         InsuranceEventEntity event = getUdalostOrThrow(eventId);
         List<InsuranceDTO> insurances = new ArrayList<>();
@@ -127,10 +169,14 @@ public class InsuranceEventService {
     }
 
 
+    /** edits a selected insurance event
+     * @param eventDTO
+     * @param insuredId
+     */
     public void edit(InsuranceEventDTO eventDTO, Long insuredId) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         InsuranceEventEntity fetchedEvent = getUdalostOrThrow(eventDTO.getInsuranceEventId());
-        udalostMapper.updateInsuranceEventEntity(eventDTO, fetchedEvent);
+        eventMapper.updateInsuranceEventEntity(eventDTO, fetchedEvent);
         List<InsuranceEntity> insurances = new ArrayList<>();
         for (Long insuranceId : eventDTO.getInsuranceIds()) {
             insurances.add(insuranceRepository.findById(insuranceId).orElseThrow());
@@ -148,6 +194,10 @@ public class InsuranceEventService {
     }
 
 
+    /**
+     * @param event
+     * @return Ids of all insurances which cannot be applied to a selected insurance event
+     */
     public List<Long> filterInsurances(InsuranceEventDTO event) {
         List<Long> invalidInsuranceIds = new ArrayList<>();
         for (Long insuranceId : event.getInsuranceIds()) {
@@ -159,6 +209,9 @@ public class InsuranceEventService {
     }
 
 
+    /** deletes an event from eventRepository
+     * @param eventId
+     */
     public void remove(long eventId) {
         InsuranceEventEntity fetchedEntity = getUdalostOrThrow(eventId);
         eventRepository.delete(fetchedEntity);

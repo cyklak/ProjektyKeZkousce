@@ -30,7 +30,7 @@ public class InsuredService {
 
     private final InsuredMapper insuredMapper;
 
-    private final InsuranceEventRepository udalostRepository;
+    private final InsuranceEventRepository eventRepository;
 
     private final InsuranceRepository insuranceRepository;
 
@@ -38,16 +38,32 @@ public class InsuredService {
 
     private final UserService userService;
 
-    public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceEventRepository udalostRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) {
+    /** InsuredService constructor
+     * @param insuredRepository
+     * @param insuredMapper
+     * @param eventRepository
+     * @param insuranceRepository
+     * @param userRepository
+     * @param userService
+     * @throws IllegalArgumentException prevents null values in constructor arguments
+     */
+    public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceEventRepository eventRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) throws IllegalArgumentException {
+        if (insuranceRepository == null || insuredRepository == null || insuredMapper == null || userRepository == null ||userService == null || eventRepository == null)
+            throw new IllegalArgumentException();
         this.insuredRepository = insuredRepository;
         this.insuredMapper = insuredMapper;
-        this.udalostRepository = udalostRepository;
+        this.eventRepository = eventRepository;
         this.insuranceRepository = insuranceRepository;
         this.userRepository = userRepository;
         this.userService = userService;
     }
 
 
+    /** creates a new insured person and saves them into InsuredRepository. If a policyholder creates a new insured person who is different from the policyholder a new user is also created
+     * and a password is generated for them.
+     * @param insured
+     * @return
+     */
     public String create(InsuredDTO insured) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         InsuredEntity newInsured = insuredMapper.toEntity(insured);
@@ -68,17 +84,27 @@ public class InsuredService {
     }
 
 
+    /**
+     * @return DTOs of all items from InsuredRepository
+     */
     public List<InsuredDTO> getAll() {
         return StreamSupport.stream(insuredRepository.findAll().spliterator(), false)
                 .map(i -> insuredMapper.toDTO(i))
                 .toList();
     }
 
+    /**
+     * @return the number of all items in InsuredRepository
+     */
     public Long getInsuredCount() {
         return insuredRepository.count();
     }
 
 
+    /**
+     * @param currentPage
+     * @return DTOs of all items from InsuredRepository, 10 per page
+     */
     public List<InsuredDTO> getInsuredList(int currentPage) {
         Page<InsuredEntity> pageOfPeople = insuredRepository.findAll(PageRequest.of(currentPage, 10));
         List<InsuredEntity> personEntities = pageOfPeople.getContent();
@@ -90,12 +116,20 @@ public class InsuredService {
     }
 
 
+    /**
+     * @param insuredId
+     * @return DTO of a selected insured person
+     */
     public InsuredDTO getById(long insuredId) {
         InsuredEntity fetchedPojistenec = getInsuredOrThrow(insuredId);
 
         return insuredMapper.toDTO(fetchedPojistenec);
     }
 
+    /**
+     * @param userId
+     * @return list of DTOs of all insured people related to the current user, if they are a policyholder
+     */
     public List<InsuredDTO> getInsuredListByUserId(long userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow();
         List<InsuredEntity> insuredList = insuredRepository.findAllBypolicyholderId(userId);
@@ -107,14 +141,17 @@ public class InsuredService {
     }
 
 
+    /** edits an insured person's details
+     * @param insured
+     */
     public void edit(InsuredDTO insured) {
         InsuredEntity fetchedInsured = getInsuredOrThrow(insured.getInsuredId());
         Long policyholderId = fetchedInsured.getPolicyholderId();
-        List<InsuranceEventEntity> events = udalostRepository.findAllByinsuredId(insured.getInsuredId());
+        List<InsuranceEventEntity> events = eventRepository.findAllByinsuredId(insured.getInsuredId());
         for (InsuranceEventEntity event : events) {
             event.setInsuredFirstName(insured.getFirstName());
             event.setInsuredLastName(insured.getLastName());
-            udalostRepository.save(event);
+            eventRepository.save(event);
         }
 
         insuredMapper.updateInsuredEntity(insured, fetchedInsured);
@@ -122,6 +159,10 @@ public class InsuredService {
         insuredRepository.save(fetchedInsured);
     }
 
+    /**
+     * @param insuredID
+     * @return an InsuredEntity selected by its ID
+     */
     private InsuredEntity getInsuredOrThrow(long insuredID) {
         return insuredRepository
                 .findById(insuredID)
@@ -129,13 +170,16 @@ public class InsuredService {
     }
 
 
+    /** deletes a person from InsuredRepository
+     * @param insuredId
+     */
     public void remove(long insuredId) {
         UserEntity user = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserEntity entity = insuredRepository.findById(insuredId).orElseThrow().getUser();
         InsuredEntity fetchedEntity = getInsuredOrThrow(insuredId);
-        List<InsuranceEventEntity> events = udalostRepository.findAllByinsuredId(insuredId);
+        List<InsuranceEventEntity> events = eventRepository.findAllByinsuredId(insuredId);
         for (InsuranceEventEntity event : events) {
-            udalostRepository.delete(event);
+            eventRepository.delete(event);
         }
         List<InsuranceEntity> insuranceList = insuranceRepository.findAllByinsured(fetchedEntity);
         for (InsuranceEntity insurance : insuranceList) {

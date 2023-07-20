@@ -30,12 +30,22 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    /** UserService constructor
+     * @param userRepository
+     * @param passwordEncoder
+     * @throws IllegalArgumentException prevents null values in constructor arguments
+     */
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) throws IllegalArgumentException{
+        if (userRepository == null || passwordEncoder == null)
+            throw new IllegalArgumentException();
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
 
+    /** creates a new user and saves them into UserRepository, this method is called during registration of new policyholders
+     * @param user
+     */
     public void create(UserDTO user) {
         if (!user.getPassword().equals(user.getConfirmPassword()))
             throw new PasswordsDoNotEqualException();
@@ -55,6 +65,10 @@ public class UserService implements UserDetailsService {
             throw new DuplicateEmailException();
         }
     }
+
+    /**
+     * @return password for a new user
+     */
     public String generatePassword () {
         String heslo = "";
         for (int i = 0; i < 7; i++) {
@@ -68,6 +82,11 @@ public class UserService implements UserDetailsService {
        return heslo;
     }
 
+    /** creates a new user and saves them into UserRepository, this method is called when a policyholder creates a new insured person who is different from the policyholder
+     * @param insured
+     * @param password
+     * @return a new userEntity
+     */
     public UserEntity createInsured(InsuredDTO insured, String password) {
 
         UserEntity userEntity = new UserEntity();
@@ -87,10 +106,19 @@ public class UserService implements UserDetailsService {
         return userEntity;
     }
 
+    /**
+     * @param id
+     * @return email of a selected policyholder
+     */
     public String getPolicyholderEmail(Long id) {
        return userRepository.findById(id).orElseThrow().getEmail();
     }
 
+    /**
+     * @param username
+     * @return details of a user selected by their username
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)

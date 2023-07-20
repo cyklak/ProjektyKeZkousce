@@ -11,8 +11,6 @@ public interface InsuranceEventRepository extends CrudRepository<InsuranceEventE
 
     Page<InsuranceEventEntity> findAll(Pageable page);
 
-    List<InsuranceEventEntity> findAllByinsuredId(Pageable page, Long insuredId);
-
     List<InsuranceEventEntity> findAllByinsuredId(Long insuredId);
 
     List<InsuranceEventEntity> findAllBypolicyholderId(Long policyholderId);

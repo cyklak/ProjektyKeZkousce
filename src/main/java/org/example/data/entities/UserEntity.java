@@ -46,6 +46,9 @@ public class UserEntity implements UserDetails {
         return password;
     }
 
+    /**
+     * @return list of roles of the current user
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

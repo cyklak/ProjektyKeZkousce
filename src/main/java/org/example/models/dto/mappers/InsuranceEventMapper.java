@@ -13,15 +13,35 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface InsuranceEventMapper {
 
+    /** converts an InsuranceEventDTO into an InsuranceEventEntity
+     * @param source
+     * @return
+     */
     InsuranceEventEntity toEntity(InsuranceEventDTO source);
 
+    /** converts an InsuranceEventEntity into an InsuranceEventDTO
+     * @param source
+     * @return
+     */
     @Mapping(target = "insuranceIds", expression = "java(getInsuranceIds(source))")
     InsuranceEventDTO toDTO(InsuranceEventEntity source);
 
+    /** updates an InsuranceEventDTO
+     * @param source
+     * @param target
+     */
     void updateInsuranceEventDTO(InsuranceEventDTO source, @MappingTarget InsuranceEventDTO target);
 
+    /** updates an InsuranceEventEntity
+     * @param source
+     * @param target
+     */
     void updateInsuranceEventEntity(InsuranceEventDTO source, @MappingTarget InsuranceEventEntity target);
 
+    /**
+     * @param source
+     * @return sets insuranceIds parameter of InsuranceEventDTO
+     */
     default List<Long> getInsuranceIds(InsuranceEventEntity source) {
         List<Long> result = new ArrayList<>();
         for (InsuranceEntity insurance : source.getInsurances()) {

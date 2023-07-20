@@ -33,13 +33,26 @@ public class InsuranceController {
     private final InsuranceService insuranceService;
 
 
-    public InsuranceController(InsuredService insuredService, InsuranceMapper insuranceMapper, InsuranceService insuranceService) {
+    /** InsuranceController constructor
+     * @param insuredService
+     * @param insuranceMapper
+     * @param insuranceService
+     * @throws IllegalArgumentException prevents null values in constructor arguments
+     */
+    public InsuranceController(InsuredService insuredService, InsuranceMapper insuranceMapper, InsuranceService insuranceService) throws IllegalArgumentException {
+        if (insuredService == null || insuranceMapper == null || insuranceService == null)
+            throw new IllegalArgumentException();
         this.insuredService = insuredService;
         this.insuranceMapper = insuranceMapper;
         this.insuranceService = insuranceService;
     }
 
 
+    /**
+     * @param model
+     * @param currentPage if user is admin, 10 items per page are displayed
+     * @return list of all insurances related to the current user; if user is admin, list of all insurances in insuranceRepo is fetched
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping("stranka/{currentPage}")
     public String renderIndex(Model model, @PathVariable int currentPage) {
@@ -76,6 +89,12 @@ public class InsuranceController {
         return "pages/pojisteni/index";
     }
 
+    /**
+     * @param insuredId
+     * @param insurance
+     * @param model
+     * @return a new insurance form
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER"})
     @GetMapping("{insuredId}/novePojisteni")
     public String renderNewInsurance(
@@ -89,6 +108,14 @@ public class InsuranceController {
         return "pages/pojisteni/novePojisteni";
     }
 
+    /** creates a new insurance for a selected insured person
+     * @param insurance
+     * @param result
+     * @param insuredId
+     * @param model
+     * @param redirectAttributes
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER"})
     @PostMapping("{insuredId}/novePojisteni")
     public String createNewInsurance(
@@ -107,11 +134,17 @@ public class InsuranceController {
         return "redirect:/pojistenci/{insuredId}";
     }
 
+    /** deletes an insurance of a selected person from Insurance Repository
+     * @param insuredId
+     * @param insuranceId
+     * @param redirectAttributes
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER"})
     @GetMapping("{insuredId}/delete/{insuranceId}")
     public String deletePojisteni(@PathVariable long insuredId, @PathVariable long insuranceId,
                                   RedirectAttributes redirectAttributes) {
-        InsuranceEntity insurance = insuranceService.getPojisteniEntity(insuranceId);
+        InsuranceEntity insurance = insuranceService.getInsuranceOrThrow(insuranceId);
         if (insurance.getEventList().isEmpty()) {
             insuranceService.remove(insuranceId);
             redirectAttributes.addFlashAttribute("success", "Pojištění bylo smazáno.");
@@ -120,6 +153,13 @@ public class InsuranceController {
         return "redirect:/pojistenci/{insuredId}";
     }
 
+    /**
+     * @param insuredId
+     * @param insuranceId
+     * @param insurance
+     * @param model
+     * @return an edit form for a selected insurance
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER"})
     @GetMapping("{insuredId}/edit/{insuranceId}")
     public String renderEditForm(
@@ -135,6 +175,15 @@ public class InsuranceController {
         return "pages/pojisteni/edit";
     }
 
+    /** edits a selected insurance
+     * @param insuredId
+     * @param insuranceId
+     * @param insurance
+     * @param result
+     * @param redirectAttributes
+     * @param model
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER"})
     @PostMapping("{insuredId}/edit/{insuranceId}")
     public String editPojisteni(
@@ -156,6 +205,12 @@ public class InsuranceController {
         return "redirect:/pojistenci/{insuredId}";
     }
 
+    /** shows details of a selected insurance
+     * @param insuredId
+     * @param insuranceId
+     * @param model
+     * @return
+     */
     @Secured({"ROLE_ADMIN", "ROLE_POLICYHOLDER", "ROLE_INSURED"})
     @GetMapping("{insuredId}/detail/{insuranceId}")
     public String renderDetail(
@@ -172,6 +227,10 @@ public class InsuranceController {
     }
 
 
+    /** if user tries to fetch a non-existing insurance from InsuranceRepository, this method displays an error message
+     * @param redirectAttributes
+     * @return
+     */
     @ExceptionHandler({InsuranceNotFoundException.class})
     public String handleInsuranceNotFoundException(
             RedirectAttributes redirectAttributes

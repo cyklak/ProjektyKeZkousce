@@ -32,7 +32,16 @@ public class InsuranceService {
 
     private final InsuranceMapper insuranceMapper;
 
-    public InsuranceService(InsuranceRepository insuranceRepository, UserRepository userRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper) {
+    /** InsuranceService constructor
+     * @param insuranceRepository
+     * @param userRepository
+     * @param insuredRepository
+     * @param insuranceMapper
+     * @throws IllegalArgumentException prevents null values in constructor arguments
+     */
+    public InsuranceService(InsuranceRepository insuranceRepository, UserRepository userRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper) throws IllegalArgumentException {
+        if (insuranceRepository == null || insuredRepository == null || userRepository == null || insuranceMapper == null)
+            throw new IllegalArgumentException();
         this.insuranceRepository = insuranceRepository;
         this.userRepository = userRepository;
         this.insuredRepository = insuredRepository;
@@ -40,16 +49,26 @@ public class InsuranceService {
     }
 
 
+    /** creates a new insurance
+     * @param insurance
+     */
     public void create(InsuranceDTO insurance) {
         InsuranceEntity newInsurance = insuranceMapper.toEntity(insurance);
         insuranceRepository.save(newInsurance);
     }
 
+    /**
+     * @return the number of all insurances in InsuranceRepository
+     */
     public Long getInsuranceCount() {
         return insuranceRepository.count();
     }
 
 
+    /**
+     * @param insuredId
+     * @return all insurances related to an insured person
+     */
     public List<InsuranceDTO> getAllByInsuredId(Long insuredId) {
         List<InsuranceEntity> insuranceList = insuredRepository.findById(insuredId).orElseThrow().getInsuranceList();
         List<InsuranceDTO> insuranceDTO = new ArrayList<>();
@@ -59,6 +78,10 @@ public class InsuranceService {
         return insuranceDTO;
     }
 
+    /**
+     * @param userId
+     * @return all insurances paid for by a policyholder
+     */
     public List<InsuranceDTO> getInsurancesByUserId(long userId) {
         UserEntity user = userRepository.findById(userId).orElseThrow();
         List<InsuredEntity> insuredList = insuredRepository.findAllBypolicyholderId(userId);
@@ -75,31 +98,40 @@ public class InsuranceService {
     }
 
 
+    /**
+     * @param insuranceId
+     * @return a DTO of an insurance selected by its ID
+     */
     public InsuranceDTO getById(long insuranceId) {
         InsuranceEntity fetchedInsurance = getInsuranceOrThrow(insuranceId);
 
         return insuranceMapper.toDTO(fetchedInsurance);
     }
 
-    private InsuranceEntity getInsuranceOrThrow(long insuranceID) {
+
+    /**
+     * @param insuranceID
+     * @return an insurance entity selected by its ID
+     */
+    public InsuranceEntity getInsuranceOrThrow(long insuranceID) {
         return insuranceRepository
                 .findById(insuranceID)
                 .orElseThrow(InsuranceNotFoundException::new);
     }
 
-    public InsuranceEntity getPojisteniEntity(long insuranceID) {
-        return insuranceRepository
-                .findById(insuranceID)
-                .orElseThrow(InsuranceNotFoundException::new);
-    }
 
-
+    /** deletes a selected insurance from insurance repository
+     * @param insuranceId
+     */
     public void remove(long insuranceId) {
         InsuranceEntity fetchedEntity = getInsuranceOrThrow(insuranceId);
         insuranceRepository.delete(fetchedEntity);
     }
 
 
+    /** edits a selected insurance
+     * @param insurance
+     */
     public void edit(InsuranceDTO insurance) {
         InsuranceEntity fetchedInsurance = getInsuranceOrThrow(insurance.getInsuranceId());
         LocalDate originallyValidFrom = fetchedInsurance.getValidFrom();
@@ -113,6 +145,10 @@ public class InsuranceService {
     }
 
 
+    /**
+     * @param currentPage
+     * @return pages of 10 items of all insurances in insurance repository
+     */
     public List<InsuranceDTO> getInsurances(int currentPage) {
         Page<InsuranceEntity> pageOfInsurances = insuranceRepository.findAll(PageRequest.of(currentPage, 10));
         List<InsuranceEntity> insuranceEntities = pageOfInsurances.getContent();

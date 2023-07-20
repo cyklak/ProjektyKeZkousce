@@ -18,6 +18,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AccountController {
     private final UserService userService;
 
+    /** AccountController constructor
+     * @param userService
+     * @throws IllegalArgumentException prevents null values in constructor arguments
+     */
     public AccountController(UserService userService) throws IllegalArgumentException {
         if (userService == null)
             throw new IllegalArgumentException();
@@ -25,16 +29,29 @@ public class AccountController {
 
     }
 
+    /**
+     * @return login form
+     */
     @GetMapping("login")
     public String renderLogin() {
         return "/pages/account/login.html";
     }
 
+    /**
+     * @param userDTO
+     * @return register form
+     */
     @GetMapping("register")
     public String renderRegister(@ModelAttribute UserDTO userDTO) {
         return "/pages/account/register";
     }
 
+    /** registers a new user
+     * @param userDTO
+     * @param result
+     * @param redirectAttributes
+     * @return login form
+     */
     @PostMapping("register")
     public String register(
             @Valid @ModelAttribute UserDTO userDTO,
