@@ -70,16 +70,16 @@ public class UserService implements UserDetailsService {
      * @return password for a new user
      */
     public String generatePassword () {
-        String heslo = "";
+        String password = "";
+        Random random = new Random();
         for (int i = 0; i < 7; i++) {
-            Random random = new Random();
             int a = random.nextInt(127);
             if (a<33)
                 a = a + 33;
-            char znak = (char)a;
-            heslo = heslo + znak;
+            char character = (char)a;
+            password = password + character;
         }
-       return heslo;
+       return password;
     }
 
     /** creates a new user and saves them into UserRepository, this method is called when a policyholder creates a new insured person who is different from the policyholder

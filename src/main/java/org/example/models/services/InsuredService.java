@@ -89,7 +89,7 @@ public class InsuredService {
      */
     public List<InsuredDTO> getAll() {
         return StreamSupport.stream(insuredRepository.findAll().spliterator(), false)
-                .map(i -> insuredMapper.toDTO(i))
+                .map(insuredMapper::toDTO)
                 .toList();
     }
 
