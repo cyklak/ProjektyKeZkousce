@@ -3,10 +3,15 @@ package org.example.models.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public class InsuredDTO {
+
 
     private long insuredId;
     @NotBlank(message = "Vyplňte jméno")
@@ -44,95 +49,4 @@ public class InsuredDTO {
 
     private long policyholderId;
 
-
-    //region: Getters and setters
-
-
-    public long getInsuredId() {
-        return insuredId;
-    }
-
-    public void setInsuredId(long insuredId) {
-        this.insuredId = insuredId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public List<Long> getInsuranceIds() {
-        return insuranceIds;
-    }
-
-    public void setInsuranceIds(List<Long> insuranceIds) {
-        this.insuranceIds = insuranceIds;
-    }
-
-    public long getPolicyholderId() {
-        return policyholderId;
-    }
-
-    public void setPolicyholderId(long policyholderId) {
-        this.policyholderId = policyholderId;
-    }
 }

@@ -56,7 +56,7 @@ public class UserService implements UserDetailsService {
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         List<Role> roles = new ArrayList<>();
         roles.add(POLICYHOLDER);
-        userEntity.setRole(roles);
+        userEntity.setRoles(roles);
         userEntity.setAdmin(false);
 
         try {
@@ -95,7 +95,7 @@ public class UserService implements UserDetailsService {
         userEntity.setPassword(passwordEncoder.encode(password));
         List<Role> roles = new ArrayList<>();
         roles.add(INSURED);
-        userEntity.setRole(roles);
+        userEntity.setRoles(roles);
         userEntity.setAdmin(false);
 
         try {

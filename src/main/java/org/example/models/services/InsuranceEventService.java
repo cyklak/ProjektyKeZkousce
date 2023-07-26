@@ -74,7 +74,7 @@ public class InsuranceEventService {
         for (Long pojisteniId : event.getInsuranceIds()) {
             eventEntity.getInsurances().add(insuranceService.getInsuranceOrThrow(pojisteniId));
         }
-        if (user.getRole().contains(Role.POLICYHOLDER))
+        if (user.getRoles().contains(Role.POLICYHOLDER))
             eventEntity.setPolicyholderId(user.getUserId());
         else
             eventEntity.setPolicyholderId(user.getInsured().getPolicyholderId());
@@ -185,7 +185,7 @@ public class InsuranceEventService {
         fetchedEvent.setInsuredId(insuredId);
         fetchedEvent.setInsuredFirstName(insuredRepository.findById(insuredId).get().getFirstName());
         fetchedEvent.setInsuredLastName(insuredRepository.findById(insuredId).get().getLastName());
-        if (user.getRole().contains(Role.POLICYHOLDER))
+        if (user.getRoles().contains(Role.POLICYHOLDER))
             fetchedEvent.setPolicyholderId(user.getUserId());
         else
             fetchedEvent.setPolicyholderId(user.getInsured().getPolicyholderId());

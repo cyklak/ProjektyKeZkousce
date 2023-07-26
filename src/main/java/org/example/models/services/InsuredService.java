@@ -70,7 +70,7 @@ public class InsuredService {
         newInsured.setPolicyholderId(user.getUserId());
         if (insured.getEmail().equals(user.getEmail())) {
             newInsured.setUser(user);
-            user.getRole().add(INSURED);
+            user.getRoles().add(INSURED);
             insuredRepository.save(newInsured);
             userRepository.save(user);
         } else {
@@ -187,7 +187,7 @@ public class InsuredService {
         }
         insuredRepository.delete(fetchedEntity);
         if (user.getUserId() == entity.getUserId()) {
-            user.getRole().remove(INSURED);
+            user.getRoles().remove(INSURED);
             userRepository.save(user);
         }
         if (user.getUserId() != entity.getUserId()) {

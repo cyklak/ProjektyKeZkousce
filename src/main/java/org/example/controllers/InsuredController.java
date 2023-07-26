@@ -62,7 +62,7 @@ public class InsuredController {
         List<InsuredDTO> insuredList = new ArrayList<>();
         if (user.isAdmin()) {
             insuredList = insuredService.getInsuredList(currentPage - 1);
-        } else if ((user.getRole().contains(POLICYHOLDER))) {
+        } else if ((user.getRoles().contains(POLICYHOLDER))) {
             insuredList = insuredService.getInsuredListByUserId(user.getUserId());
             model.addAttribute("pagination", 1);
         } else {
@@ -122,7 +122,7 @@ public class InsuredController {
         String password = "";
         if (result.hasErrors())
             return renderNewInsured(insured, model);
-        if ((user.getRole().contains(INSURED)) && (insured.getEmail().equals(user.getEmail()))) {
+        if ((user.getRoles().contains(INSURED)) && (insured.getEmail().equals(user.getEmail()))) {
             result.rejectValue("email", "error", "Již jste pojištěncem.");
             return renderNewInsured(insured, model);
         }

@@ -1,6 +1,8 @@
 package org.example.data.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.example.models.dto.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +16,8 @@ import static org.example.models.dto.Role.*;
 
 
 @Entity
+@Getter
+@Setter
 public class UserEntity implements UserDetails {
 
     @Id
@@ -82,56 +86,6 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    // region: Getters and Setters
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    // public String getPassword() {
-    //  return password;
-    //}
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public InsuredEntity getInsured() {
-        return insured;
-    }
-
-    public void setInsured(InsuredEntity insured) {
-        this.insured = insured;
-    }
-
-    public List<Role> getRole() {
-        return roles;
-    }
-
-    public void setRole(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
-// endregion
 
 
 }

@@ -84,7 +84,7 @@ public class InsuranceEventController {
                 }
             }
         } else {
-            if (user.getRole().contains(POLICYHOLDER)) {
+            if (user.getRoles().contains(POLICYHOLDER)) {
                 events = eventService.getEventsByUserId(user.getUserId());}
             else {
                 events = eventService.getEventsByInsuredId(user.getInsured().getInsuredId());}
