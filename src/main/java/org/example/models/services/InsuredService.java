@@ -1,5 +1,7 @@
 package org.example.models.services;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.example.data.entities.InsuranceEntity;
 import org.example.data.entities.InsuranceEventEntity;
 import org.example.data.entities.InsuredEntity;
@@ -21,42 +23,31 @@ import java.util.List;
 import java.util.stream.StreamSupport;
 
 import static org.example.models.dto.Role.INSURED;
-
+/**
+ * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
+ */
+@AllArgsConstructor
 @Service
 public class InsuredService {
 
-
+    @NonNull
     private final InsuredRepository insuredRepository;
 
+    @NonNull
     private final InsuredMapper insuredMapper;
 
+    @NonNull
     private final InsuranceEventRepository eventRepository;
 
+    @NonNull
     private final InsuranceRepository insuranceRepository;
 
+    @NonNull
     private final UserRepository userRepository;
 
+    @NonNull
     private final UserService userService;
 
-    /** InsuredService constructor
-     * @param insuredRepository
-     * @param insuredMapper
-     * @param eventRepository
-     * @param insuranceRepository
-     * @param userRepository
-     * @param userService
-     * @throws IllegalArgumentException prevents null values in constructor arguments
-     */
-    public InsuredService(InsuredRepository insuredRepository, InsuredMapper insuredMapper, InsuranceEventRepository eventRepository, InsuranceRepository insuranceRepository, UserRepository userRepository, UserService userService) throws IllegalArgumentException {
-        if (insuranceRepository == null || insuredRepository == null || insuredMapper == null || userRepository == null ||userService == null || eventRepository == null)
-            throw new IllegalArgumentException();
-        this.insuredRepository = insuredRepository;
-        this.insuredMapper = insuredMapper;
-        this.eventRepository = eventRepository;
-        this.insuranceRepository = insuranceRepository;
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
 
 
     /** creates a new insured person and saves them into InsuredRepository. If a policyholder creates a new insured person who is different from the policyholder a new user is also created

@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import jakarta.validation.Valid;
+import lombok.*;
 import org.example.models.dto.UserDTO;
 import org.example.models.exceptions.DuplicateEmailException;
 import org.example.models.exceptions.PasswordsDoNotEqualException;
@@ -13,21 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
+/**
+ * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
+ */
+@AllArgsConstructor
 @Controller
 @RequestMapping("/account")
 public class AccountController {
+
+    @NonNull
     private final UserService userService;
 
-    /** AccountController constructor
-     * @param userService
-     * @throws IllegalArgumentException prevents null values in constructor arguments
-     */
-    public AccountController(UserService userService) throws IllegalArgumentException {
-        if (userService == null)
-            throw new IllegalArgumentException();
-        this.userService = userService;
-
-    }
 
     /**
      * @return login form

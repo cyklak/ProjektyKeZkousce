@@ -1,5 +1,7 @@
 package org.example.models.services;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.example.data.entities.UserEntity;
 import org.example.data.repositories.UserRepository;
 import org.example.models.dto.InsuredDTO;
@@ -20,27 +22,18 @@ import java.util.List;
 import java.util.Random;
 
 import static org.example.models.dto.Role.*;
-
+/**
+ * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
+ */
+@AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
 
-
+    @NonNull
     private final UserRepository userRepository;
 
-
+    @NonNull
     private final PasswordEncoder passwordEncoder;
-
-    /** UserService constructor
-     * @param userRepository
-     * @param passwordEncoder
-     * @throws IllegalArgumentException prevents null values in constructor arguments
-     */
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) throws IllegalArgumentException{
-        if (userRepository == null || passwordEncoder == null)
-            throw new IllegalArgumentException();
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
 
     /** creates a new user and saves them into UserRepository, this method is called during registration of new policyholders

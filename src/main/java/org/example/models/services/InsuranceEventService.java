@@ -1,5 +1,7 @@
 package org.example.models.services;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.example.data.entities.InsuranceEntity;
 import org.example.data.entities.InsuranceEventEntity;
 import org.example.data.entities.UserEntity;
@@ -19,47 +21,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
+ */
+@AllArgsConstructor
 @Service
 public class InsuranceEventService {
 
-
+    @NonNull
     private final InsuranceRepository insuranceRepository;
 
-
+    @NonNull
     private final InsuredRepository insuredRepository;
 
-
+    @NonNull
     private final InsuranceMapper insuranceMapper;
 
-
+    @NonNull
     private final InsuranceService insuranceService;
 
+    @NonNull
     private final InsuranceEventMapper eventMapper;
 
-
+    @NonNull
     private final InsuranceEventRepository eventRepository;
-
-
-    /** InsuranceEventService constructor
-     * @param insuranceRepository
-     * @param insuredRepository
-     * @param insuranceMapper
-     * @param insuranceService
-     * @param eventMapper
-     * @param eventRepository
-     * @throws IllegalArgumentException  prevents null values in constructor arguments
-     */
-    public InsuranceEventService(InsuranceRepository insuranceRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper, InsuranceService insuranceService, InsuranceEventMapper eventMapper, InsuranceEventRepository eventRepository) throws IllegalArgumentException {
-        if (insuranceRepository == null || insuredRepository == null || insuranceService == null || insuranceMapper == null || eventMapper == null || eventRepository == null)
-            throw new IllegalArgumentException();
-        this.insuranceRepository = insuranceRepository;
-        this.insuredRepository = insuredRepository;
-        this.insuranceMapper = insuranceMapper;
-        this.insuranceService = insuranceService;
-        this.eventMapper = eventMapper;
-        this.eventRepository = eventRepository;
-    }
 
 
     /** creates a new insurance event

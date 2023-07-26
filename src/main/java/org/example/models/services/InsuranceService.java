@@ -1,5 +1,7 @@
 package org.example.models.services;
 
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.example.data.entities.InsuranceEntity;
 import org.example.data.entities.InsuredEntity;
 import org.example.data.entities.UserEntity;
@@ -16,37 +18,24 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
+ */
+@AllArgsConstructor
 @Service
 public class InsuranceService {
 
-
+    @NonNull
     private final InsuranceRepository insuranceRepository;
 
-
+    @NonNull
     private final UserRepository userRepository;
 
-
+    @NonNull
     private final InsuredRepository insuredRepository;
 
-
+    @NonNull
     private final InsuranceMapper insuranceMapper;
-
-    /** InsuranceService constructor
-     * @param insuranceRepository
-     * @param userRepository
-     * @param insuredRepository
-     * @param insuranceMapper
-     * @throws IllegalArgumentException prevents null values in constructor arguments
-     */
-    public InsuranceService(InsuranceRepository insuranceRepository, UserRepository userRepository, InsuredRepository insuredRepository, InsuranceMapper insuranceMapper) throws IllegalArgumentException {
-        if (insuranceRepository == null || insuredRepository == null || userRepository == null || insuranceMapper == null)
-            throw new IllegalArgumentException();
-        this.insuranceRepository = insuranceRepository;
-        this.userRepository = userRepository;
-        this.insuredRepository = insuredRepository;
-        this.insuranceMapper = insuranceMapper;
-    }
 
 
     /** creates a new insurance

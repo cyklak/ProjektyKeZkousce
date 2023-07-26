@@ -1,6 +1,8 @@
 package org.example.controllers;
 
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.example.data.entities.UserEntity;
 import org.example.models.dto.InsuranceDTO;
 import org.example.models.dto.InsuranceEventDTO;
@@ -22,34 +24,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.models.dto.Role.*;
-
+/**
+ * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
+ */
+@AllArgsConstructor
 @Controller
 @RequestMapping("/udalosti/")
 public class InsuranceEventController {
 
+    @NonNull
     private final InsuranceService insuranceService;
 
+    @NonNull
     private final InsuredService insuredService;
 
+    @NonNull
     private final InsuranceEventService eventService;
 
+    @NonNull
     private final InsuranceEventMapper eventMapper;
-
-    /** InsuranceEventController Constructor
-     * @param insuranceService
-     * @param insuredService
-     * @param eventService
-     * @param eventMapper
-     * @throws IllegalArgumentException prevents null values in constructor arguments
-     */
-    public InsuranceEventController(InsuranceService insuranceService, InsuredService insuredService, InsuranceEventService eventService, InsuranceEventMapper eventMapper) throws IllegalArgumentException {
-        if (insuredService == null || eventService == null || insuranceService == null || eventMapper == null)
-            throw new IllegalArgumentException();
-        this.insuranceService = insuranceService;
-        this.insuredService = insuredService;
-        this.eventService = eventService;
-        this.eventMapper = eventMapper;
-    }
 
     /**
      * @param model

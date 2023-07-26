@@ -28,6 +28,4 @@ public class UserDTO {
     @Size(min = 6, message = "Heslo musí mít alespoň 6 znaků")
     private String confirmPassword;
 
-    private Role role;
-
 }
