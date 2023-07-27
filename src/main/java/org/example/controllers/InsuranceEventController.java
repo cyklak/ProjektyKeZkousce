@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.example.models.dto.Role.*;
+
 /**
  * lombok generated constructor throws IllegalArgumentException that prevents null values in constructor arguments
  */
@@ -78,19 +79,24 @@ public class InsuranceEventController {
             }
         } else {
             if (user.getRoles().contains(POLICYHOLDER)) {
-                events = eventService.getEventsByUserId(user.getUserId());}
-            else {
-                events = eventService.getEventsByInsuredId(user.getInsured().getInsuredId());}
-            if (insuranceService.getAllByInsuredId(user.getUserId()).size()>0)
-                model.addAttribute("newEventButton",1);
+                events = eventService.getEventsByUserId(user.getUserId());
+            } else {
+                events = eventService.getEventsByInsuredId(user.getInsured().getInsuredId());
+            }
+            if (user.getRoles().contains(INSURED)) {
+                if (insuranceService.getAllByInsuredId(user.getUserId()).size() > 0)
+                    model.addAttribute("newEventButton", 1);
                 model.addAttribute("pagination", 1);
+            }
         }
         model.addAttribute("events", events);
 
         return "pages/udalosti/index";
     }
 
-    /** this method shows details of an insurance event
+    /**
+     * this method shows details of an insurance event
+     *
      * @param eventId
      * @param model
      * @return
@@ -137,7 +143,9 @@ public class InsuranceEventController {
         return "pages/udalosti/novaUdalost";
     }
 
-    /** creates a new insurance event
+    /**
+     * creates a new insurance event
+     *
      * @param eventDTO
      * @param result
      * @param model
@@ -195,7 +203,9 @@ public class InsuranceEventController {
         return "pages/udalosti/edit";
     }
 
-    /** edits a selected insurance event
+    /**
+     * edits a selected insurance event
+     *
      * @param insuranceEventId
      * @param eventDTO
      * @param result
@@ -225,7 +235,9 @@ public class InsuranceEventController {
 
     }
 
-    /** deletes a selected insurance event
+    /**
+     * deletes a selected insurance event
+     *
      * @param insuranceEventId
      * @param redirectAttributes
      * @return
@@ -233,14 +245,16 @@ public class InsuranceEventController {
     @Secured({"ROLE_ADMIN", "ROLE_INSURED"})
     @GetMapping("delete/{insuranceEventId}")
     public String deleteEvent(@PathVariable long insuranceEventId,
-                                RedirectAttributes redirectAttributes) {
+                              RedirectAttributes redirectAttributes) {
         eventService.remove(insuranceEventId);
         redirectAttributes.addFlashAttribute("success", "Událost byla smazána.");
 
         return "redirect:/udalosti/stranka/1";
     }
 
-    /** if user tries to fetch a non-existing event from InsuranceEventRepository, this method displays an error message
+    /**
+     * if user tries to fetch a non-existing event from InsuranceEventRepository, this method displays an error message
+     *
      * @param redirectAttributes
      * @return
      */
