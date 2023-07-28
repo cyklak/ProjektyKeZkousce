@@ -84,7 +84,7 @@ public class InsuranceEventController {
                 events = eventService.getEventsByInsuredId(user.getInsured().getInsuredId());
             }
             if (user.getRoles().contains(INSURED)) {
-                if (insuranceService.getAllByInsuredId(user.getUserId()).size() > 0)
+                if (insuranceService.getAllByInsuredId(user.getInsured().getInsuredId()).size() > 0)
                     model.addAttribute("newEventButton", 1);
                 model.addAttribute("pagination", 1);
             }
